@@ -11,9 +11,10 @@ Template for Guardian Interactive projects, using Grunt 0.4
 
 If it tells you you don't have the necessary privileges, be more assertive:
 
-    alias bloody=sudo
-    bloody npm install -g grunt-init
-
+```shell
+alias bloody=sudo
+bloody npm install -g grunt-init
+```
 
 ###2. Install the template
 `git clone git@github.com:GuardianInteractive/grunt-init-template.git ~/.grunt-init/gui`
