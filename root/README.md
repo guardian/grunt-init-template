@@ -36,5 +36,5 @@ $ grunt watch
 
 Launch a server - http://localhost:9876 (you can change the port in Gruntfile.js):
 
-$ grunt connect
+$ grunt server
 
