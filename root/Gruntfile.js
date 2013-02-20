@@ -41,9 +41,12 @@ module.exports = function(grunt) {
 
 		// Compile .scss files
 		sass: {
+			options: {
+				style: 'compressed'
+			},
 			dev: {
 				files: {
-					'tmp/': 'project/styles/*.scss'
+					'project/src/min.css': 'project/styles/*.scss'
 				},
 				options: {
 					debugInfo: true
@@ -51,20 +54,11 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'tmp/': 'project/styles/*.scss'
+					'project/src/min.css': 'project/styles/*.scss'
 				}
 			}
 		},
 		
-		// Concatenate all the files in tmp/css and minify as project/src/min.css
-		cssmin: {
-			compress: {
-				files: {
-					'project/src/min.css': 'tmp/css/*.css'
-				}
-			}
-		},
-
 		// Optimize JavaScript by minifying into a single file
 		requirejs: {
 			compile: {
@@ -130,10 +124,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-dir2json');
 
 	// default task - compile .scss files and flatten data
-	grunt.registerTask( 'default', [ 'sass', 'mincss', 'data' ] );
+	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json' ] );
 
 	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [ 'lint', 'default', 'requirejs', 'copy' ]);
+	grunt.registerTask( 'build', [ 'lint', 'sass:dist', 'dir2json', 'requirejs', 'copy' ]);
 
 	// aliases
 	grunt.registerTask( 'zip', [ 'compress' ]);
