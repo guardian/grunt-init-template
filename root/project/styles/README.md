@@ -1,4 +1,4 @@
-tl;dr - run `grunt watch`, and do your CSS in the sass-styles folder. Grunt will take it from there.
+tl;dr - run `grunt watch`, and do your CSS in this folder ('styles'). Grunt will take it from there.
 
 What is this?
 =============
@@ -13,7 +13,7 @@ What is it doing outside my `src` folder?
 
 Because .scss files are useless to a web browser - they need to be compiled by Sass. So there's not much point having them within `src`.
 
-Instead, your .scss files are compiled to .css files in `css-temp`, and from there they are concatenated and minified. The resulting file, `min.css`, is placed in `src` to be referenced from your `index.html` file.
+Instead, your .scss files are compiled to `project/src/min.css`, to be referenced from your `index.html` file.
 
 If you run `grunt watch` this process will happen automatically every time you modify one of your .scss files or add a new one. You don't need to include a <link> tag for each one or anything like that - it will just get included.
 
