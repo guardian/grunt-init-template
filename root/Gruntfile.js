@@ -87,7 +87,7 @@ module.exports = function(grunt) {
 		compress: {
 			zip: {
 				files: {
-					'build/zip/build-<%= grunt.template.today("yyyy-mm-dd_HH-MM-ss") %>.zip': 'build/tmp/**'
+					'build/zip/<%= pkg.name %>-<%= grunt.template.today("yyyy-mm-dd_HH-MM-ss") %>.zip': 'build/tmp/**'
 				}
 			}
 		},
@@ -102,6 +102,16 @@ module.exports = function(grunt) {
 		connect: {
 			server: {
 				base: 'project/src',
+				port: 9876,
+				keepalive: true
+			},
+			preview: {
+				base: 'preview',
+				port: 9876,
+				keepalive: true
+			},
+			build: {
+				base: 'build/tmp',
 				port: 9876,
 				keepalive: true
 			}
@@ -127,10 +137,14 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json' ] );
 
 	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [ 'lint', 'sass:dist', 'dir2json', 'requirejs', 'copy' ]);
+	grunt.registerTask( 'build', [ 'clean', 'lint', 'sass:dist', 'dir2json', 'requirejs', 'copy' ]);
 
 	// aliases
 	grunt.registerTask( 'zip', [ 'compress' ]);
 	grunt.registerTask( 'lint', [ 'jshint' ]);
+
+	grunt.registerTask( 'server', 'connect:server' );
+	grunt.registerTask( 'preview', 'connect:preview' );
+	grunt.registerTask( 'sanitycheck', 'connect:build' );
 
 };
