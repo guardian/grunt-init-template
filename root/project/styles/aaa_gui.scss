@@ -1,0 +1,77 @@
+@import "base";
+
+// Default cross-project styles
+body, html {
+	width: 100%;
+	overflow-x: hidden;
+	margin: 0;
+	padding: 0;
+	@include border-box;
+}
+
+body.is-fullscreen {
+	padding: 1em;
+}
+
+.gui {
+	width: 100%;
+	position: relative;
+	@include border-box;
+	font-family: 'Guardian Text Egyptian Web', 'Arial';
+	font-size: 1em;
+	background-color: white;
+
+	@media (min-width: 64em) and (min-height: 36em) {
+		font-size: 1.1em;
+	}
+
+	@media (min-width: 80em) and (min-height: 45em) {
+		font-size: 1.2em;
+	}
+
+	@media (min-width: 96em) and (min-height: 54em) {
+		font-size: 1.3em;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Guardian Egyptian Web', 'Georgia';
+		font-weight: 700;
+		//margin: 0;
+	}
+
+	p, span {
+		font-family: 'Guardian Text Egyptian Web', 'Arial';
+		line-height: 1.4em;
+		color: #545454;
+		margin: 0 0 0.5em 0;
+	}
+
+	a {
+		color: #005689;
+		cursor: pointer;
+	}
+
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+
+// full width mode
+@media (min-width: 50em) {
+	body, html {
+		height: 100%;
+		overflow-y: hidden;
+	}
+
+	.gui {
+		height: 100%;
+		padding: $header-height 0 0 0;
+	}
+
+	body.not-in-iframe {
+		padding: 1em;
+	}
+}
+
+.no-fullscreen .hide-if-fullscreen-disabled {
+	display: none;
+}

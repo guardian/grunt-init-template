@@ -1,0 +1,99 @@
+.gui {
+	.loading {
+		background-color: white;
+		border: 1px solid #eee;
+		box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+		border-radius: 0.5em;
+		width: 7em;
+		margin: 6em auto;
+		background-size: 100%;
+
+		padding: 2em 5em;
+		text-align: center;
+
+		h2 {
+			font-size: 2em;
+			margin: 0 0 0.5em 0;
+		}
+
+		span {
+			font-size: 1.6em;
+		}
+	}
+
+	.loading .circles {
+		position: relative;
+		width: 3.6em;
+		height: 1em;
+		margin: 0 auto;
+	}
+
+	.loading .circles div {
+		position: absolute;
+		width: 1em;
+		height: 1em;
+		margin: 0 auto;
+		border-radius: 50%;
+		background-color: #0061a6;
+		opacity: 0;
+
+		-webkit-animation: blink 1s ease-in-out infinite alternate;
+		   -moz-animation: blink 1s ease-in-out infinite alternate;
+		    -ms-animation: blink 1s ease-in-out infinite alternate;
+		     -o-animation: blink 1s ease-in-out infinite alternate;
+		        animation: blink 1s ease-in-out infinite alternate;
+
+	}
+
+
+	.loading .circles .left {
+		left: 0;
+	}
+
+	.loading .circles .middle {
+		left: 1.3em;
+
+		-webkit-animation-delay: 0.2s;
+		   -moz-animation-delay: 0.2s;
+		    -ms-animation-delay: 0.2s;
+		     -o-animation-delay: 0.2s;
+		        animation-delay: 0.2s;
+	}
+
+	.loading .circles .right {
+		left: 2.6em;
+
+		-webkit-animation-delay: 0.4s;
+		   -moz-animation-delay: 0.4s;
+		    -ms-animation-delay: 0.4s;
+		     -o-animation-delay: 0.4s;
+		        animation-delay: 0.4s;
+
+	}
+}
+
+
+@-webkit-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-moz-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-ms-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-o-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
