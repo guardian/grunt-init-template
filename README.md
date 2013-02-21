@@ -29,6 +29,6 @@ cd my-project
 grunt-init gui
 ```
 
-You will be prompted for a project name, but it will default to the name of the folder you created (`my-project` in the example above), so just hit `Enter` then `n`.
+You will be prompted for a project name, but it will default to the name of the folder you created (`my-project` in the example above), so just hit `Enter` twice.
 
 You will then be prompted to do `npm install` to install grunt (and its plugins and dependencies) locally to the project. Further instructions for setting up with GitHub and using grunt can be found in the project's brand spanking new `README.md` file.

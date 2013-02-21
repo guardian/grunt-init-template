@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 			},
 			data: {
 				files: 'project/data/**/*',
-				tasks: 'data',
+				tasks: 'dir2json:dev',
 				interrupt: true
 			}
 		},
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
 		// lint .js files in the src/js folder
 		jshint: {
-			files: 'project/src/js/**/*.js',
+			files: 'project/root/js/**/*.js',
 			options: {
 
 			}
@@ -36,7 +36,9 @@ module.exports = function(grunt) {
 
 		
 		// remove build/tmp folder
-		clean: 'build/tmp',
+		clean: {
+			dist: [ 'dist' ]
+		},
 
 
 		// Compile .scss files
@@ -46,7 +48,7 @@ module.exports = function(grunt) {
 			},
 			dev: {
 				files: {
-					'project/src/min.css': 'project/styles/*.scss'
+					'dev/min.css': 'project/styles/*.scss'
 				},
 				options: {
 					debugInfo: true
@@ -54,7 +56,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'project/src/min.css': 'project/styles/*.scss'
+					'dist/min.css': 'project/styles/*.scss'
 				}
 			}
 		},
@@ -63,10 +65,10 @@ module.exports = function(grunt) {
 		requirejs: {
 			compile: {
 				options: {
-					baseUrl: 'project/src/js/',
+					baseUrl: 'project/root/js/',
 					out: 'build/tmp/js/main.js',
 					name: 'main',
-					mainConfigFile: 'project/src/js/main.js'
+					mainConfigFile: 'project/root/js/main.js'
 				}
 			}
 		},
@@ -75,10 +77,10 @@ module.exports = function(grunt) {
 		copy: {
 			src: {
 				files: {
-					'build/tmp/': [ 'project/src/*.html', 'project/src/require.js', 'project/src/min.css', 'project/src/assets/**', 'project/src/data/**' ]
+					'build/tmp/': [ 'project/root/*.html', 'project/root/require.js', 'project/root/min.css', 'project/root/assets/**', 'project/root/data/**' ]
 				},
 				options: {
-					basePath: 'project/src'
+					basePath: 'project/root'
 				}
 			}
 		},
@@ -93,28 +95,74 @@ module.exports = function(grunt) {
 		},
 
 		// Combine contents of `project/data` into a single `data.json` file
-		data: {
-			root: 'project/data/',
-			dest: 'project/src/data/data.json'
+		dir2json: {
+			dev: {
+				root: 'project/data/',
+				dest: 'dev/data.json'
+			},
+			dist: {
+				root: 'project/data/',
+				dest: 'dist/data.json'
+			}
 		},
 
 		// launch a static server
 		connect: {
-			server: {
-				base: 'project/src',
+			options: {
 				port: 9876,
 				keepalive: true
+			},
+			server: {
+				options: {
+					base: 'project/root',
+					middleware: function ( connect, options ) {
+						return [
+							function ( req, res, next ) {
+								var codeobject, index;
+
+								if ( req.url === '/' ) {
+									codeobject = grunt.file.read( 'project/codeobject.html' );
+
+									index = grunt.file.read( 'dev/index.html' );
+
+									while ( codeobject.indexOf( '<%= ROOT %>' ) !== -1 ) {
+										codeobject = codeobject.replace( '<%= ROOT %>', '' );
+									}
+
+									res.end( index.replace( '<%= CODEOBJECT %>', codeobject ) );
+								} else {
+									next();
+								}
+							},
+
+							// try project/root first
+							connect[ 'static' ]( 'project/root' ),
+
+							// then auto-generated files in dev
+							connect[ 'static' ]( 'dev' ),
+
+							// browse directories
+							connect.directory( options.base, {
+								hidden: true,
+								icons: true
+							})
+						];
+					}
+				}
 			},
 			preview: {
-				base: 'preview',
-				port: 9876,
-				keepalive: true
+				base: 'preview'
 			},
 			build: {
-				base: 'build/tmp',
-				port: 9876,
-				keepalive: true
+				base: 'build/tmp'
 			}
+		},
+
+		deploy: {
+			bucket: 'gdn-cdn',
+			path: '{%= path %}',
+			guid: '{%= guid %}',
+			root: 'dist'
 		}
 
 	});
@@ -130,14 +178,16 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-requirejs');
 	grunt.loadNpmTasks('grunt-contrib-compress');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.loadNpmTasks('grunt-dir2json');
+	grunt.loadNpmTasks('grunt-gui-deploy');
 
 	// default task - compile .scss files and flatten data
-	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json' ] );
+	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json:dev' ] );
 
 	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [ 'clean', 'lint', 'sass:dist', 'dir2json', 'requirejs', 'copy' ]);
+	grunt.registerTask( 'build', [ 'clean:dist', 'lint', 'sass:dist', 'dir2json:dist', 'requirejs', 'copy' ]);
 
 	// aliases
 	grunt.registerTask( 'zip', [ 'compress' ]);
