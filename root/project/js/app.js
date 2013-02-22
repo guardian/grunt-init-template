@@ -3,9 +3,9 @@
 define(
 	
 // dependency paths go here. These could be the paths specified in main.js
-[ '$', '../lib/exampleLibrary' ],
+[ '$' ],
 
-function ( $, example ) {
+function ( $ ) {
 
 	'use strict';
 	
@@ -16,14 +16,10 @@ function ( $, example ) {
 					var loading = $( '#loading' );
 
 					loading.fadeOut( function () {
-						loading.remove();
-						$( '#gui-example' ).hide().html( '<h2>Check the console output</h2>' ).fadeIn();
+						loading.html( '<h2>ta-da!</h2>' ).fadeIn();
 					});
-				}, 1000 );
+				}, 2000 );
 			});
-
-			example.helloworld();
-			console.log( 'Now try building the project with \'grunt build\'. Unless you already did' );
 		}
 	};
 

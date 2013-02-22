@@ -65,23 +65,23 @@ module.exports = function(grunt) {
 		requirejs: {
 			compile: {
 				options: {
-					baseUrl: 'project/root/js/',
-					out: 'build/tmp/js/main.js',
+					baseUrl: 'project/js/',
+					out: 'dist/main.js',
 					name: 'main',
-					mainConfigFile: 'project/root/js/main.js'
+					mainConfigFile: 'project/js/main.js'
 				}
 			}
 		},
 
 		// Copy the files we need from the src folder to build/tmp
 		copy: {
-			src: {
-				files: {
-					'build/tmp/': [ 'project/root/*.html', 'project/root/require.js', 'project/root/min.css', 'project/root/assets/**', 'project/root/data/**' ]
-				},
-				options: {
-					basePath: 'project/root'
-				}
+			root: {
+				files: [{
+					expand: true,
+					cwd: 'project/root',
+					src: ['**'],
+					dest: 'dist/'
+				}]
 			}
 		},
 		
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
 		compress: {
 			zip: {
 				files: {
-					'build/zip/<%= pkg.name %>-<%= grunt.template.today("yyyy-mm-dd_HH-MM-ss") %>.zip': 'build/tmp/**'
+					'zip/<%= pkg.name %>-<%= grunt.template.today("yyyy-mm-dd_HH-MM-ss") %>.zip': 'dist/**/*'
 				}
 			}
 		},
@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 								if ( req.url === '/' ) {
 									codeobject = grunt.file.read( 'project/codeobject.html' );
 
-									index = grunt.file.read( 'dev/index.html' );
+									index = grunt.file.read( 'project/preview/default.html' );
 
 									while ( codeobject.indexOf( '<%= ROOT %>' ) !== -1 ) {
 										codeobject = codeobject.replace( '<%= ROOT %>', '' );
@@ -141,6 +141,12 @@ module.exports = function(grunt) {
 							// then auto-generated files in dev
 							connect[ 'static' ]( 'dev' ),
 
+							// then javascript files
+							connect[ 'static' ]( 'project/js' ),
+
+							// then the preview files
+							connect[ 'static' ]( 'project/preview' ),
+
 							// browse directories
 							connect.directory( options.base, {
 								hidden: true,
@@ -150,11 +156,10 @@ module.exports = function(grunt) {
 					}
 				}
 			},
-			preview: {
-				base: 'preview'
-			},
-			build: {
-				base: 'build/tmp'
+			sanitycheck: {
+				options: {
+					base: 'dist'
+				}
 			}
 		},
 
@@ -183,11 +188,29 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-dir2json');
 	grunt.loadNpmTasks('grunt-gui-deploy');
 
-	// default task - compile .scss files and flatten data
-	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json:dev' ] );
+
+	// simple render task. yeah, this is filthy, refactor ASAP
+	grunt.registerTask( 'render', 'Render index file and codeobject', function () {
+
+		var codeobject, index;
+
+		codeobject = grunt.file.read( 'project/codeobject.html' );
+		index = grunt.file.read( 'project/preview/default.html' );
+
+		while ( codeobject.indexOf( '<%= ROOT %>' ) !== -1 ) {
+			codeobject = codeobject.replace( '<%= ROOT %>', '' );
+		}
+
+		index = index.replace( '<%= CODEOBJECT %>', codeobject );
+
+		grunt.file.write( 'dist/index.html', index );
+	});
+
+
+	
 
 	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [ 'clean:dist', 'lint', 'sass:dist', 'dir2json:dist', 'requirejs', 'copy' ]);
+	grunt.registerTask( 'build', [ 'clean:dist', 'lint', 'sass:dist', 'dir2json:dist', 'requirejs', 'copy', 'render' ]);
 
 	// aliases
 	grunt.registerTask( 'zip', [ 'compress' ]);
@@ -195,6 +218,10 @@ module.exports = function(grunt) {
 
 	grunt.registerTask( 'server', 'connect:server' );
 	grunt.registerTask( 'preview', 'connect:preview' );
-	grunt.registerTask( 'sanitycheck', 'connect:build' );
+	grunt.registerTask( 'sanitycheck', 'connect:sanitycheck' );
+
+
+	// default task - compile .scss files and flatten data
+	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json:dev' ] );
 
 };

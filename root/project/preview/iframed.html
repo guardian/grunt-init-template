@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+	<meta charset='utf-8'>
+	<title>Previewing {%= name %}</title>
+
+	<!-- CSS -->
+	<link rel='stylesheet' href='preview.css'>
+</head>
+
+<body>
+	<h1><span id='form'></span> &ndash; <span id='width'></span>x<span id='height'></span></h1>
+	<p><a href='/preview.html'>&laquo; back to preview list</a></p>
+	<p>Your mileage may vary! Test thoroughly on real devices. Mobile device simulations assume we have the following meta tag:</p>
+	<code>&lt;meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'&gt;</code>
+
+	<div id='container'></div>
+
+	<!-- JS -->
+	<script>
+		window.onload = function () {
+			var container, iframe, query, match, width, height, widthSpan, heightSpan;
+
+			query = window.location.search;
+
+			match = /form=([^&]+)/.exec( query );
+			if ( match ) {
+				form = decodeURIComponent( match[1] );
+			} else {
+				form = 'iframe'
+			}
+
+			match = /width=([0-9]+)/.exec( query );
+			if ( match ) {
+				width = +match[1];
+			} else {
+				width = 940;
+			}
+
+			match = /height=([0-9]+)/.exec( query );
+			if ( match ) {
+				height = +match[1];
+			} else {
+				width = 600;
+			}
+
+			iframe = document.createElement( 'iframe' );
+			iframe.src = '/';
+			iframe.width = width;
+			iframe.height = height;
+
+			document.getElementById( 'form' ).innerHTML = form;
+			document.getElementById( 'width' ).innerHTML = width;
+			document.getElementById( 'height' ).innerHTML = height;
+
+			document.getElementById( 'container' ).appendChild( iframe );
+		}
+	</script>
+</body>
+</html>

@@ -1,18 +1,10 @@
 require.config({
-	baseUrl: 'js/',
+	baseUrl: '',
 	
-	shim: {
-		// Here is where you define modules that haven't been written for AMD.
-		// For example let's shim jQuery
-		$: {
-			exports: 'jQuery'
-		}
-	},
-
 	paths: {
 		// You can define paths here and use them within modules. Paths are
 		// relative to `baseUrl` defined above. Example:
-		$: '../lib/jquery'
+		$: 'lib/jquery.amd'
 	}
 });
 
