@@ -11,17 +11,17 @@
 	width: 100%;
 	position: relative;
 	@include border-box;
-	font-family: 'Guardian Text Egyptian Web', 'Arial';
+	font-family: 'Guardian-Text-Egyp-Web-Med-Latin', 'Arial';
 	background-color: white;
 
 	h1, h2, h3, h4, h5, h6 {
-		font-family: 'Guardian Egyptian Web', 'Georgia';
+		font-family: 'Guardian-Text-Egyp-Web-Med-Latin', 'Georgia';
 		font-weight: 700;
 		//margin: 0;
 	}
 
 	p, span {
-		font-family: 'Guardian Text Egyptian Web', 'Arial';
+		font-family: 'Guardian-Text-Egyp-Web-Med-Latin', 'Arial';
 		line-height: 1.4em;
 		color: #545454;
 		margin: 0 0 0.5em 0;

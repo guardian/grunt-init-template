@@ -9,19 +9,39 @@ function ( $ ) {
 
 	'use strict';
 	
-	var app = {
-		init: function () {
-			$( function () {
-				setTimeout( function () {
-					var loading = $( '#loading' );
+	var app, deferreds;
 
-					loading.fadeOut( function () {
-						loading.html( '<h2>ta-da!</h2>' ).fadeIn();
-					});
-				}, 2000 );
+	app = {};
+
+	deferreds = {};
+
+	// wait for DOM ready
+	deferreds.dom = new $.Deferred();
+	$(function () {
+		deferreds.dom.resolve();
+	});
+
+
+	// load our app data
+	deferreds.data = $.ajax( 'data.json' ).done( function ( data ) {
+		app.data = data;
+	}).fail( function () {
+		throw new Error( 'Run grunt to create the data.json file, then reload' );
+	});
+
+
+	// when we have DOM ready and data ready, proceed
+	$.when( deferreds.dom, deferreds.data ).done( function () {
+		setTimeout( function () {
+			var demo = $( '#gui-{%= name %}' );
+
+			demo.fadeOut( function () {
+				demo.html( app.data.scaffolding ).fadeIn();
 			});
-		}
-	};
+		}, 2000 );
+	});
+
+	
 
 	window.app = app; // useful for debugging!
 

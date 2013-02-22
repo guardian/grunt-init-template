@@ -117,9 +117,11 @@ module.exports = function(grunt) {
 					base: 'project/root',
 					middleware: function ( connect, options ) {
 						return [
+							// special cases
 							function ( req, res, next ) {
 								var codeobject, index;
 
+								// index page - render codeobject, insert into preview/default.html, and serve
 								if ( req.url === '/' ) {
 									codeobject = grunt.file.read( 'project/codeobject.html' );
 
@@ -130,7 +132,20 @@ module.exports = function(grunt) {
 									}
 
 									res.end( index.replace( '<%= CODEOBJECT %>', codeobject ) );
-								} else {
+								}
+
+								// readme - render markdown
+								else if ( req.url.toLowerCase() === '/readme' ) {
+									var readme, html, style;
+
+									readme = grunt.file.read( 'README.md' );
+									html = require( 'markdown' ).markdown.toHTML( readme );
+									style = '<style>body{font-family:"Helvetica Neue", "Arial";font-size:16px;color:#333;}pre{background-color:#eee;display:block;padding:5px;}</style>';
+
+									res.end( style + html );
+								}
+
+								else {
 									next();
 								}
 							},
