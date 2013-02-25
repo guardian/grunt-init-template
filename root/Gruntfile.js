@@ -140,7 +140,7 @@ module.exports = function(grunt) {
 
 									readme = grunt.file.read( 'README.md' );
 									html = require( 'markdown' ).markdown.toHTML( readme );
-									style = '<style>body{font-family:"Helvetica Neue", "Arial";font-size:16px;color:#333;}pre{background-color:#eee;display:block;padding:5px;}</style>';
+									style = '<style>body{font-family:"Helvetica Neue", "Arial";font-size:16px;color:#333;}pre{background-color:#eee;display:block;padding:5px;}hr{margin:2em 0;}</style>';
 
 									res.end( style + html );
 								}
