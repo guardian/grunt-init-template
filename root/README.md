@@ -6,8 +6,13 @@ Created with the [grunt-init gui template](https://github.com/GuardianInteractiv
 
 1. Install grunt and its dependencies
 -------------------------------------
+This applies whether you are initialising the project, or you've cloned the repo from GitHub (as development dependencies are excluded from the repo by .gitignore):
+
     $ npm install
 
+***
+
+This section obviously only applies if you are initialising the project.
 
 2. Create local repo
 --------------------
@@ -30,6 +35,7 @@ Assuming you called the remote repo **{%= name %}**, you would do
     $ git remote add origin https://github.com/GuardianInteractive/{%= name %}.git
     $ git push -u origin master
 
+***
 
 5. Start grunting
 -----------------
