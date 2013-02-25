@@ -1,3 +1,13 @@
+# ignore .DS_Store files
 .DS_Store
-build/
-.sass-cache
+
+# ignore the node_modules folder - dev dependencies should be listed in package.json and not included in the repo...
+node_modules/
+
+# ...but don't ignore project-specific node_modules (in other words, put project-specific node_modules here!)
+!project/node_modules
+
+# ignore the dist and zip folders, they can get pretty big
+dist/
+zip/
+
