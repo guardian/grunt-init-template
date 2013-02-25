@@ -22,7 +22,7 @@
 		"grunt-contrib-compress": "~0.4.0",
 		"grunt-contrib-copy": "~0.4.0",
 		"grunt-dir2json": "~0.1.0",
-		"grunt-gui-deploy": "git://github.com/GuardianInteractive/grunt-gui-deploy.git",
+		"grunt-gui-deploy": "https://github.com/GuardianInteractive/grunt-gui-deploy.git",
 		"markdown": "~0.4.0"
 	}
 }
