@@ -1,9 +1,32 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+	'use strict';
+
+	// helpers
+	var url;
+
+	url = require( 'url' );
+
 	grunt.initConfig({
 		
 		pkg: grunt.file.readJSON('package.json'),
+
+		// Deployment-related stuff
+		guid: '{%= guid %}',
+
+		baseUrl: 'http://interactive.guim.co.uk/',
+
+		projectPath: '{%= path %}',
+		versionDir: '/v/<%= version %>',
+		versionPath: '<%= projectPath %><%= versionDir %>',
+		
+		projectUrl: '<%= baseUrl %><%= projectPath %>',
+		versionUrl: '<%= baseUrl %><%= projectPath %><%= versionDir %>',
+
+		s3: {
+			bucket: 'gdn-cdn'
+		},
 
 		// Main watch task. Kick this off by entering `grunt watch`. Now, any time you change the files below,
 		// the relevant tasks will execute
@@ -13,31 +36,36 @@ module.exports = function(grunt) {
 				tasks: 'sass',
 				interrupt: true
 			},
-			css: {
-				files: 'tmp/css/*',
-				tasks: 'cssmin',
-				interrupt: true
-			},
 			data: {
 				files: 'project/data/**/*',
 				tasks: 'dir2json:dev',
 				interrupt: true
+			},
+			codeobject: {
+				files: 'project/codeobject.html',
+				tasks: 'replaceTags:codeobject'
+			},
+			index: {
+				files: 'project/index.html',
+				tasks: [ 'replaceTags:codeobject', 'replaceTags:index' ]
 			}
 		},
 
 
 		// lint .js files in the src/js folder
 		jshint: {
-			files: 'project/root/js/**/*.js',
+			files: 'project/**/*.js',
 			options: {
-
+				jshintrc: '.jshintrc'
 			}
 		},
 
 		
-		// remove build/tmp folder
+		// clean up old cruft
 		clean: {
-			dist: [ 'dist' ]
+			tmp: [ 'tmp' ],
+			dist: [ 'dist' ],
+			generated: [ 'generated' ]
 		},
 
 
@@ -48,7 +76,7 @@ module.exports = function(grunt) {
 			},
 			dev: {
 				files: {
-					'dev/min.css': 'project/styles/*.scss'
+					'generated/version-x/min.css': 'project/styles/*.scss'
 				},
 				options: {
 					debugInfo: true
@@ -56,7 +84,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'dist/min.css': 'project/styles/*.scss'
+					'dist/version/min.css': 'project/styles/*.scss'
 				}
 			}
 		},
@@ -66,7 +94,7 @@ module.exports = function(grunt) {
 			compile: {
 				options: {
 					baseUrl: 'project/js/',
-					out: 'dist/main.js',
+					out: 'dist/version/main.js',
 					name: 'main',
 					mainConfigFile: 'project/js/main.js'
 				}
@@ -75,12 +103,44 @@ module.exports = function(grunt) {
 
 		// Copy the files we need from the src folder to build/tmp
 		copy: {
-			root: {
+			version: {
 				files: [{
 					expand: true,
-					cwd: 'project/root',
+					cwd: 'project/files',
 					src: ['**'],
-					dest: 'dist/'
+					dest: 'dist/version/'
+				}]
+			},
+			boot: {
+				files: [{
+					expand: true,
+					cwd: 'project/boot',
+					src: ['**'],
+					dest: 'dist/boot/'
+				}]
+			}
+		},
+
+		// Compress any CSS in the boot folder
+		cssmin: {
+			dist: {
+				files: [{
+					expand: true,
+					cwd: 'project/boot',
+					src: '**/*.css',
+					dest: 'dist/boot/'
+				}]
+			}
+		},
+
+		// Minify any JS in the boot folder
+		uglify: {
+			dist: {
+				files: [{
+					expand: true,
+					cwd: 'project/boot',
+					src: '**/*.js',
+					dest: 'dist/boot/'
 				}]
 			}
 		},
@@ -98,91 +158,170 @@ module.exports = function(grunt) {
 		dir2json: {
 			dev: {
 				root: 'project/data/',
-				dest: 'dev/data.json'
+				dest: 'generated/version-x/data.json'
 			},
 			dist: {
 				root: 'project/data/',
-				dest: 'dist/data.json'
+				dest: 'dist/version/data.json'
 			}
 		},
 
-		// launch a static server
-		connect: {
+
+
+		server: {
 			options: {
-				port: 9876,
-				keepalive: true
+				port: 9876
 			},
-			server: {
+			dev: {
 				options: {
-					base: 'project/root',
-					middleware: function ( connect, options ) {
-						return [
-							// special cases
-							function ( req, res, next ) {
-								var codeobject, index;
+					mappings: [
+						{
+							prefix: '/version-x/',
+							src: [ 'project/files/', 'generated/version-x/', 'project/js/' ]
+						},
+						{
+							prefix: '/preview/',
+							src: 'project/preview/'
+						},
+						{
+							prefix: '/',
+							src: [ 'project/boot/', 'generated/' ]
+						},
+						{
+							prefix: '/readme',
+							src: function ( req ) {
+								var markdown, html, style;
 
-								// index page - render codeobject, insert into preview/default.html, and serve
-								if ( req.url === '/' ) {
-									codeobject = grunt.file.read( 'project/codeobject.html' );
+								markdown = grunt.file.read( 'README.md' );
+								html = require( 'markdown' ).markdown.toHTML( markdown );
 
-									index = grunt.file.read( 'project/preview/default.html' );
+								style = "<style>body {font-family: 'Helvetica Neue', 'Arial'; font-size: 16px; color: #333; } pre { background-color: #eee; padding: 0.5em; } hr { margin: 2em 0 }</style>";
 
-									while ( codeobject.indexOf( '<%= ROOT %>' ) !== -1 ) {
-										codeobject = codeobject.replace( '<%= ROOT %>', '' );
-									}
+								return style + html;
+							}
+						}
+					]
+				}
+			}
+		},
 
-									res.end( index.replace( '<%= CODEOBJECT %>', codeobject ) );
-								}
-
-								// readme - render markdown
-								else if ( req.url.toLowerCase() === '/readme' ) {
-									var readme, html, style;
-
-									readme = grunt.file.read( 'README.md' );
-									html = require( 'markdown' ).markdown.toHTML( readme );
-									style = '<style>body{font-family:"Helvetica Neue", "Arial";font-size:16px;color:#333;}pre{background-color:#eee;display:block;padding:5px;}hr{margin:2em 0;}</style>';
-
-									res.end( style + html );
-								}
-
-								else {
-									next();
-								}
-							},
-
-							// try project/root first
-							connect[ 'static' ]( 'project/root' ),
-
-							// then auto-generated files in dev
-							connect[ 'static' ]( 'dev' ),
-
-							// then javascript files
-							connect[ 'static' ]( 'project/js' ),
-
-							// then the preview files
-							connect[ 'static' ]( 'project/preview' ),
-
-							// browse directories
-							connect.directory( options.base, {
-								hidden: true,
-								icons: true
-							})
-						];
+		
+		// Render variables
+		replaceTags: {
+			predeployCodeobject: {
+				src: 'project/codeobject.html',
+				dest: 'tmp/codeobject.html',
+				options: {
+					variables: {
+						projectUrl: '',
+						versionDir: 'v/<%= version %>'
 					}
 				}
 			},
-			sanitycheck: {
+			predeployIndex: {
+				src: 'project/index.html',
+				dest: 'dist/boot/index.html',
 				options: {
-					base: 'dist'
+					variables: {
+						codeobject: function () {
+							return grunt.file.read( 'tmp/codeobject.html' );
+						}
+					}
+				}
+			},
+			devCodeobject: {
+				src: 'project/codeobject.html',
+				dest: 'generated/codeobject.html',
+				options: {
+					variables: {
+						projectUrl: '',
+						versionDir: 'version-x/'
+					}
+				}
+			},
+			devIndex: {
+				src: 'project/index.html',
+				dest: 'generated/index.html',
+				options: {
+					variables: {
+						codeobject: function () {
+							return grunt.file.read( 'generated/codeobject.html' );
+						}
+					}
 				}
 			}
 		},
 
-		deploy: {
-			bucket: 'gdn-cdn',
-			path: '{%= path %}',
-			guid: '{%= guid %}',
-			root: 'dist'
+
+		// Download from S3
+		downloadFromS3: {
+			options: {
+				bucket: '<%= s3.bucket %>'
+			},
+			manifest: {
+				options: {
+					key: '<%= projectPath %>/manifest.json',
+					dest: 'tmp/manifest.json'
+				}
+			}
+		},
+
+
+		// Verify manifest
+		verifyManifest: {
+			options: {
+				src: 'tmp/manifest.json'
+			}
+		},
+
+
+		lockProject: {
+			options: {
+				bucket: '<%= s3.bucket %>',
+				lockfile: '<%= projectPath %>/locked.txt'
+			}
+		},
+
+		// Upload to S3
+		uploadToS3: {
+			options: {
+				bucket: '<%= s3.bucket %>'
+			},
+			manifest: {
+				options: {
+					key: '<%= projectPath %>/manifest.json',
+					data: '{"guid":"<%= guid %>","version":<%= version %>}',
+					params: {
+						CacheControl: 'no-cache',
+						ContentType: 'application/json'
+					}
+				}
+			},
+			version: {
+				options: {
+					root: 'dist/version/',
+					pathPrefix: '<%= versionPath %>',
+					params: {
+						CacheControl: 'max-age=31536000'
+					}
+				}
+			},
+			boot: {
+				options: {
+					root: 'dist/boot/',
+					pathPrefix: '<%= projectPath %>',
+					params: {
+						CacheControl: 'max-age=20'
+					}
+				}
+			}
+		},
+
+		// shell commands
+		shell: {
+			open: {
+				command: 'open <%= projectUrl %>/index.html'
+			}
 		}
 
 	});
@@ -195,48 +334,55 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-requirejs');
 	grunt.loadNpmTasks('grunt-contrib-compress');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.loadNpmTasks('grunt-dir2json');
-	grunt.loadNpmTasks('grunt-gui-deploy');
+	grunt.loadNpmTasks('grunt-shell');
+	
 
-
-	// simple render task. yeah, this is filthy, refactor ASAP
-	grunt.registerTask( 'render', 'Render index file and codeobject', function () {
-
-		var codeobject, index;
-
-		codeobject = grunt.file.read( 'project/codeobject.html' );
-		index = grunt.file.read( 'project/preview/default.html' );
-
-		while ( codeobject.indexOf( '<%= ROOT %>' ) !== -1 ) {
-			codeobject = codeobject.replace( '<%= ROOT %>', '' );
-		}
-
-		index = index.replace( '<%= CODEOBJECT %>', codeobject );
-
-		grunt.file.write( 'dist/index.html', index );
-	});
-
+	// Guardian Interactive tasks
+	grunt.loadNpmTasks('grunt-gui');
 
 	
 
 	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [ 'clean:dist', 'lint', 'sass:dist', 'dir2json:dist', 'requirejs', 'copy', 'render' ]);
+	grunt.registerTask( 'build', [
+		'clean:dist',
+		'lint',
+		'sass:dist',
+		'dir2json:dist',
+		'requirejs',
+		'copy',
+		'cssmin:dist',
+		'uglify:dist'
+	]);
+
+	// launch sequence
+	grunt.registerTask( 'deploy', [
+		'clean:tmp',
+		'createS3Instance',
+		'downloadFromS3:manifest',
+		'verifyManifest',
+		'replaceTags:predeployCodeobject',
+		'replaceTags:predeployIndex',
+		'lockProject',
+		'uploadToS3:manifest',
+		'uploadToS3:version',
+		'uploadToS3:boot',
+		'lockProject:unlock',
+		'shell:open'
+	]);
 
 	// aliases
 	grunt.registerTask( 'zip', [ 'compress' ]);
 	grunt.registerTask( 'lint', [ 'jshint' ]);
 
-	grunt.registerTask( 'server', 'connect:server' );
-	grunt.registerTask( 'preview', 'connect:preview' );
-	grunt.registerTask( 'sanitycheck', 'connect:sanitycheck' );
-
 
 	// default task - compile .scss files and flatten data
-	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json:dev' ] );
+	grunt.registerTask( 'default', [ 'sass:dev', 'dir2json:dev', 'replaceTags:devCodeobject', 'replaceTags:devIndex' ] );
 
 };

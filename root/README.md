@@ -57,6 +57,9 @@ To launch a server - <http://local.static.guim.co.uk:9876> (you can change the p
 ------------------
 Project anatomy:
 
+* **`boot`**  
+your boot files, which are responsible for doing any feature detection or picking a code path (if multiple code paths exist, e.g. mobile vs desktop), then loading the interactive. These files have access to `<%= ROOT %>` and `<%= VERSION_PATH %>` variables, which are set as appropriate on deployment
+
 * **`data`**  
 files in here will be bundled together as data.json (see [grunt-dir2json](https://npmjs.org/package/grunt-dir2json) for more info)
 
@@ -69,8 +72,8 @@ your scripts. The project template currently assumes you are using AMD
 * **`preview`**  
 files to enable previewing the project at different screen sizes etc. (This folder also contains `default.html`, which is used to render the final `index.html`)
 
-* **`root`**  
-any files you want to include in the project, besides your index.html, min.css and data.json files (which are auto-generated). E.g. images
+* **`files`**  
+any additional files you want to include in the project, besides your index.html, min.css and data.json files (which are auto-generated). E.g. images
 
 * **`styles`**  
 .scss files, from which `min.css` is generated
