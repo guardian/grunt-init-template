@@ -170,7 +170,7 @@ module.exports = function(grunt) {
 
 		server: {
 			options: {
-				port: 9876
+				port: 80
 			},
 			dev: {
 				options: {
@@ -342,6 +342,9 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-dir2json');
 	grunt.loadNpmTasks('grunt-shell');
+
+
+	grunt.loadNpmTasks('grunt-devtools');
 	
 
 	// Guardian Interactive tasks
