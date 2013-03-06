@@ -58,7 +58,7 @@ To launch a server - <http://local.static.guim.co.uk:9876> (you can change the p
 Project anatomy:
 
 * **`boot`**  
-your boot files, which are responsible for doing any feature detection or picking a code path (if multiple code paths exist, e.g. mobile vs desktop), then loading the interactive. These files have access to `<%= ROOT %>` and `<%= VERSION_PATH %>` variables, which are set as appropriate on deployment
+your boot files, which are responsible for doing any feature detection or picking a code path (if multiple code paths exist, e.g. mobile vs desktop), then loading the interactive. These files have access to `<%= projectUrl %>` and `<%= versionDir %>` variables, which are set as appropriate on deployment
 
 * **`data`**  
 files in here will be bundled together as data.json (see [grunt-dir2json](https://npmjs.org/package/grunt-dir2json) for more info)

@@ -20,7 +20,7 @@ function ( $ ) {
 
 
 			// load our app data
-			deferreds.data = $.ajax( app.projectUrl + app.versionDir + 'data.json' ).done( function ( data ) {
+			deferreds.data = $.ajax( '<%= projectUrl %>/<%= versionDir %>/data.json' ).done( function ( data ) {
 				app.data = data;
 			}).fail( function () {
 				throw new Error( 'Run grunt to create the data.json file, then reload' );
@@ -30,16 +30,14 @@ function ( $ ) {
 			// when we have DOM ready and data ready, proceed
 			$.when( deferreds.dom, deferreds.data ).done( function () {
 				
-				console.log( 'root: %s', app.root );
-				console.log( 'versionPath: %s', app.versionPath );
+				console.log( 'projectUrl: %s', app.projectUrl );
+				console.log( 'versionDir: %s', app.versionDir );
 
-				setTimeout( function () {
-					var demo = $( '#gui-{%= name %}' );
+				var demo = $( '#gui-{%= name %}' );
 
-					demo.fadeOut( function () {
-						demo.html( app.data.scaffolding ).fadeIn();
-					});
-				}, 2000 );
+				demo.fadeOut( function () {
+					demo.html( app.data.scaffolding ).fadeIn();
+				});
 			});
 		}
 	};

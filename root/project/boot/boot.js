@@ -8,16 +8,13 @@
 	// In this example we just want to append our javascript once the initial page load
 	// is complete
 
-	var thisScriptTag, projectUrl, versionDir, init, appendElement, appendScript, appendScripts;
+	var init, createElement, appendScript, appendScripts, scripts, body, head;
+
+	head = document.head;
+	body = document.body;
 
 
-	// root URL and current version path (e.g 'http://interactive.guim.co.uk/2013/feb/test/', 'v/5/' )
-	thisScriptTag = document.getElementById( 'boot-gig-test-01' );
-	projectUrl = thisScriptTag.getAttribute( 'data-project-url' );
-	versionDir = thisScriptTag.getAttribute( 'data-version-dir' );
-
-
-	appendElement = function ( type, attrs, props ) {
+	createElement = function ( type, attrs, props ) {
 		var key, el = document.createElement( type );
 
 		for ( key in attrs ) {
@@ -32,7 +29,7 @@
 			}
 		}
 
-		document.body.appendChild( el );
+		return el;
 	};
 
 
@@ -53,30 +50,30 @@
 		};
 
 		for ( i=0; i<urls.length; i+=1 ) {
-			appendElement( 'script', { src: urls[i] }, { onload: check });
+			head.appendChild( createElement( 'script', { src: urls[i] }, { onload: check }) );
 		}
 	};
 
-	// TODO replace with a proper DOM ready function
-	window.onload = function () {
-		var scripts = [];
+	
+	// see which scripts we need to load
+	scripts = [];
 
-		if ( !window.jQuery ) {
-			scripts[ scripts.length ] = 'http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js';
-		}
+	// jQuery?
+	if ( !window.jQuery ) {
+		scripts[ scripts.length ] = 'http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js';
+	}
 
-		appendScripts( scripts, function () {
-			appendElement( 'script', {
-				id: 'main-gig-test-01',
-				'data-main': projectUrl + versionDir + 'main.js',
-				'data-project-url': projectUrl,
-				'data-version-dir': versionDir,
-				src: 'http://pasteup.guim.co.uk/js/lib/requirejs/2.1.1/require.min.js'
-			});
-		});
+	// requirejs?
+	if ( !window.require ) {
+		scripts[ scripts.length ] = 'http://pasteup.guim.co.uk/js/lib/requirejs/2.1.1/require.min.js';
+	}
 
-		// add project CSS
-		appendElement( 'link', { rel: 'stylesheet', href: projectUrl + versionDir + 'min.css' });
-	};
+	// add those scripts, then once they've loaded, start our app
+	appendScripts( scripts, function () {
+		head.appendChild( createElement( 'script', { src: '<%= projectUrl %>/<%= versionDir %>/js/main.js' }) );
+	});
+	
+	// add project CSS
+	head.appendChild( createElement( 'link', { rel: 'stylesheet', href: '<%= projectUrl %>/<%= versionDir %>/min.css' }) );
 
 }());
