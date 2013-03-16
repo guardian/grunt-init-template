@@ -1,0 +1,25 @@
+@import "base";
+
+.GuiNoScript {
+	background-color: rgb(255,255,190);
+	font-size: 16px;
+	padding: 3em 1em;
+	text-align: center;
+	width: 100%;
+	display: block;
+}
+
+.GuiBrowserWarning {
+	background-color: rgb(255,190,190);
+	font-size: 16px;
+	padding: 1em;
+	width: 100%;
+	display: block;
+
+	h2 {
+		font-family: 'Guardian-Text-Egyp-Web-Reg-Latin', 'Georgia';
+		border-top: none !important;
+		font-weight: normal;
+		font-size: 20px;
+	}
+}
