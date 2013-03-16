@@ -1,21 +1,25 @@
-<link rel='stylesheet' href='<%= projectUrl %>/boot.css'>
-
+<!-- Help setting up if you need it - remove this line and the next one once you're up and running -->
 <a href='/readme'>README!</a>
 
-<div id='gui-{%= name %}' class='gui'>
-	<noscript>
-		<span>Please <a href='http://enable-javascript.com/'>enable JavaScript</a> to view this interactive feature</span>
-	</noscript>
 
+<!-- Start of '{%= name %}'' interactive -->
+<noscript>
+	<span class='GuiNoScript'>Please <a href='http://enable-javascript.com/'>enable JavaScript</a> to view this interactive feature</span>
+	<style type='text/css'>#Gui{%= Name %} { display: none; }</style>
+</noscript>
+
+<div id='Gui{%= Name %}' class='Gui'>
+	<link rel='stylesheet' href='<%= projectUrl %>/boot.css'>
 	<script src='<%= projectUrl %>/boot.js'></script>
 
-	<div id='loading' class='gui-loading'>
-		<h2>loading</h2>
+	<div id='Gui{%= Name %}_Loading' class='GuiLoading'>
+		<h2 class='GuiLoading_Text'>loading</h2>
 
-		<div class='circles'>
-			<div class='left'></div>
-			<div class='middle'></div>
-			<div class='right'></div>
+		<div class='GuiLoading_Circles'>
+			<div class='GuiLoading_Circles_Left'></div>
+			<div class='GuiLoading_Circles_Middle'></div>
+			<div class='GuiLoading_Circles_Right'></div>
 		</div>
 	</div>
 </div>
+<!-- End of '{%= name %}'' interactive -->

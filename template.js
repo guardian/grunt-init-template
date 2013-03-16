@@ -49,6 +49,9 @@
 			// default path
 			props.path = getDefaultPath( props.timestamp, props.name );
 
+			// capitalise name
+			props.Name = props.name.substr( 0, 1 ).toUpperCase() + props.name.substring( 1 );
+
 			files = init.filesToCopy( props );
 
 			init.copyAndProcess( files, props );

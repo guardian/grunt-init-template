@@ -1,3 +1,5 @@
+# styles
+
 tl;dr - run `grunt watch`, and do your CSS in this folder ('styles'). Grunt will take it from there.
 
 What is this?
@@ -8,12 +10,10 @@ Sass stands for Syntactically Awesome Stylesheets. It is a more efficient way to
 But you don't need to know any of that if you don't want, because Sass is also a superset of CSS - which means that you can carry on writing CSS as before.
 
 
-What is it doing outside my `src` folder?
------------------------------------------
+How do these styles get into my project?
+----------------------------------------
 
-Because .scss files are useless to a web browser - they need to be compiled by Sass. So there's not much point having them within `src`.
-
-Instead, your .scss files are compiled to `project/src/min.css`, to be referenced from your `index.html` file.
+The `grunt sass` task is configured to compile the contents of this folder to `generated/v/x/min.css` during development, and `build/version/min.css` in the pre-deployment build step. (The `boot.js` file refers to it as `<%= projectUrl %>/<%= versionDir %>/min.css`).
 
 If you run `grunt watch` this process will happen automatically every time you modify one of your .scss files or add a new one. You don't need to include a <link> tag for each one or anything like that - it will just get included.
 

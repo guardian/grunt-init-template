@@ -1,0 +1,86 @@
+$vendors: webkit, moz, ms, o;
+
+@mixin delay($length) {
+	@each $vendor in $vendors { -#{$vendor}-animation-delay: #{$length}s; }
+	animation-delay: #{$length}s;
+}
+
+.GuiLoading {
+	background-color: white;
+	width: 7em;
+	margin: 0 auto;
+	padding: 2em 5em;
+	text-align: center;
+
+	.GuiLoading_Text {
+		font-family: 'Guardian-Text-Egyp-Web-Reg-Latin', 'Georgia';
+		font-size: 2em;
+		font-weight: normal;
+		margin: 0 0 0.5em 0;
+	}
+}
+
+.GuiLoading_Circles {
+	position: relative;
+	width: 3.6em;
+	height: 1em;
+	margin: 0 auto;
+}
+
+%circle {
+	position: absolute;
+	width: 1em;
+	height: 1em;
+	margin: 0 auto;
+	border-radius: 50%;
+	background-color: #0061a6;
+	opacity: 0;
+
+	@each $vendor in $vendors { -#{$vendor}-animation: blink 1s ease-in-out infinite alternate; }
+	animation: blink 1s ease-in-out infinite alternate;
+}
+
+.GuiLoading_Circles_Left {
+	@extend %circle;
+	left: 0;
+}
+
+.GuiLoading_Circles_Middle {
+	@extend %circle;
+	left: 1.3em;
+
+	@include delay(0.2);
+}
+
+.GuiLoading_Circles_Right {
+	@extend %circle;
+	left: 2.6em;
+
+	@include delay(0.4);
+}
+
+
+@-webkit-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-moz-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-ms-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@-o-keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes blink {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}

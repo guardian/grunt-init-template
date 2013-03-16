@@ -1,79 +1,43 @@
 /*global document, window */
 
+// https://github.com/rgrove/lazyload
+var LazyLoad=function(k){function p(b,a){var g=k.createElement(b),c;for(c in a)a.hasOwnProperty(c)&&g.setAttribute(c,a[c]);return g}function l(b){var a=m[b],c,f;if(a)c=a.callback,f=a.urls,f.shift(),h=0,f.length||(c&&c.call(a.context,a.obj),m[b]=null,n[b].length&&j(b))}function w(){var b=navigator.userAgent;c={async:k.createElement("script").async===!0};(c.webkit=/AppleWebKit\//.test(b))||(c.ie=/MSIE/.test(b))||(c.opera=/Opera/.test(b))||(c.gecko=/Gecko\//.test(b))||(c.unknown=!0)}function j(b,a,g,f,h){var j=
+function(){l(b)},o=b==="css",q=[],d,i,e,r;c||w();if(a)if(a=typeof a==="string"?[a]:a.concat(),o||c.async||c.gecko||c.opera)n[b].push({urls:a,callback:g,obj:f,context:h});else{d=0;for(i=a.length;d<i;++d)n[b].push({urls:[a[d]],callback:d===i-1?g:null,obj:f,context:h})}if(!m[b]&&(r=m[b]=n[b].shift())){s||(s=k.head||k.getElementsByTagName("head")[0]);a=r.urls;d=0;for(i=a.length;d<i;++d)g=a[d],o?e=c.gecko?p("style"):p("link",{href:g,rel:"stylesheet"}):(e=p("script",{src:g}),e.async=!1),e.className="lazyload",
+e.setAttribute("charset","utf-8"),c.ie&&!o?e.onreadystatechange=function(){if(/loaded|complete/.test(e.readyState))e.onreadystatechange=null,j()}:o&&(c.gecko||c.webkit)?c.webkit?(r.urls[d]=e.href,t()):(e.innerHTML='@import "'+g+'";',u(e)):e.onload=e.onerror=j,q.push(e);d=0;for(i=q.length;d<i;++d)s.appendChild(q[d])}}function u(b){var a;try{a=!!b.sheet.cssRules}catch(c){h+=1;h<200?setTimeout(function(){u(b)},50):a&&l("css");return}l("css")}function t(){var b=m.css,a;if(b){for(a=v.length;--a>=0;)if(v[a].href===
+b.urls[0]){l("css");break}h+=1;b&&(h<200?setTimeout(t,50):l("css"))}}var c,s,m={},h=0,n={css:[],js:[]},v=k.styleSheets;return{css:function(b,a,c,f){j("css",b,a,c,f)},js:function(b,a,c,f){j("js",b,a,c,f)}}}(this.document);
+
 (function () {
 
 	'use strict';
 
-	// Here you can do browser detection, redirect users to a standalone mobile view, etc.
-	// In this example we just want to append our javascript once the initial page load
-	// is complete
+	var scripts;
 
-	var init, createElement, appendScript, appendScripts, scripts, body, head;
+	// Here you can do browser detection, redirect users to a standalone mobile view, etc. In this
+	// example we just want to append our javascript and CSS once the initial page load is complete
 
-	head = document.head;
-	body = document.body;
-
-
-	createElement = function ( type, attrs, props ) {
-		var key, el = document.createElement( type );
-
-		for ( key in attrs ) {
-			if ( attrs.hasOwnProperty( key ) ) {
-				el.setAttribute( key, attrs[ key] );
-			}
-		}
-
-		for ( key in props ) {
-			if ( props.hasOwnProperty( key ) ) {
-				el[ key ] = props[ key ];
-			}
-		}
-
-		return el;
-	};
+	// Load project CSS
+	LazyLoad.css( '<%= projectUrl %>/<%= versionDir %>/min.css' );
 
 
-	appendScripts = function ( urls, oncomplete ) {
-		var i, remaining, check;
-
-		remaining = urls.length;
-
-		if ( !remaining && oncomplete ) {
-			oncomplete();
-			return;
-		}
-
-		check = function () {
-			if ( !--remaining && oncomplete ) {
-				oncomplete();
-			}
-		};
-
-		for ( i=0; i<urls.length; i+=1 ) {
-			head.appendChild( createElement( 'script', { src: urls[i] }, { onload: check }) );
-		}
-	};
-
-	
-	// see which scripts we need to load
-	scripts = [];
-
-	// jQuery?
-	if ( !window.jQuery ) {
-		scripts[ scripts.length ] = 'http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js';
+	// In production, we want to use a CDN-hosted jQuery. We don't need RequireJS, since
+	// the built main.js includes Almond
+	if ( <%= production %> ) {
+		scripts = [
+			'http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js'
+		];
 	}
 
-	// requirejs?
-	if ( !window.require ) {
-		scripts[ scripts.length ] = 'http://pasteup.guim.co.uk/js/lib/requirejs/2.1.1/require.min.js';
+	// During development, we want to use local copies of jQuery and RequireJS
+	else {
+		scripts = [
+			'<%= projectUrl %>/<%= versionDir %>/js/lib/jquery.js',
+			'<%= projectUrl %>/<%= versionDir %>/js/require.js'
+		];
 	}
 
-	// add those scripts, then once they've loaded, start our app
-	appendScripts( scripts, function () {
-		head.appendChild( createElement( 'script', { src: '<%= projectUrl %>/<%= versionDir %>/js/main.js' }) );
+	// Load non-bundled dependencies, then start our app
+	LazyLoad.js( scripts, function () {
+		LazyLoad.js( '<%= projectUrl %>/<%= versionDir %>/js/main.js' );
 	});
-	
-	// add project CSS
-	head.appendChild( createElement( 'link', { rel: 'stylesheet', href: '<%= projectUrl %>/<%= versionDir %>/min.css' }) );
 
 }());

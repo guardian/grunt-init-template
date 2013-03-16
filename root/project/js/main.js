@@ -9,11 +9,6 @@
 		}
 	});
 
-	require([ 'app' ], function ( app ) {
-		app.projectUrl = '<%= projectUrl %>';
-		app.versionDir = '<%= versionDir %>';
-
-		app.init();
-	});
+	require([ 'app' ]);
 
 }());

@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 		// the relevant tasks will execute
 		watch: {
 			sass: {
-				files: 'project/styles/*.scss',
+				files: 'project/styles/**/*.scss',
 				tasks: 'sass',
 				interrupt: true
 			},
@@ -69,13 +69,13 @@ module.exports = function(grunt) {
 			options: { style: 'compressed' },
 			dev: {
 				files: {
-					'generated/version-x/min.css': 'project/styles/*.scss'
+					'generated/v/x/min.css': 'project/styles/**/*.scss'
 				},
 				options: { debugInfo: true }
 			},
 			build: {
 				files: {
-					'build/version/min.css': 'project/styles/*.scss'
+					'build/version/min.css': 'project/styles/**/*.scss'
 				}
 			}
 		},
@@ -86,8 +86,17 @@ module.exports = function(grunt) {
 				options: {
 					baseUrl: 'tmp/build/js/',
 					out: 'build/version/js/main.js',
-					name: 'main',
-					mainConfigFile: 'tmp/build/js/main.js'
+					name: 'almond',
+					include: 'main',
+					mainConfigFile: 'tmp/build/js/main.js',
+					wrap: true,
+					optimize: 'uglify2',
+					uglify2: {
+						compress: {
+							dead_code: true,
+							conditionals: true // e.g. rewrite `if ( <%= production %> ) { doX(); } else { doY() }` as `doX()`
+						}
+					}
 				}
 			}
 		},
@@ -107,7 +116,7 @@ module.exports = function(grunt) {
 					expand: true,
 					cwd: 'project/boot',
 					src: ['**'],
-					dest: 'build/'
+					dest: 'build/boot/'
 				}]
 			}
 		},
@@ -132,7 +141,7 @@ module.exports = function(grunt) {
 		dir2json: {
 			dev: {
 				root: 'project/data/',
-				dest: 'generated/version-x/data.json',
+				dest: 'generated/v/x/data.json',
 				options: { space: '\t' }
 			},
 			build: {
@@ -148,12 +157,12 @@ module.exports = function(grunt) {
 				options: {
 					mappings: [
 						{
-							prefix: '/version-x/js',
+							prefix: '/v/x/js',
 							src: 'project/js/'
 						},
 						{
-							prefix: '/version-x',
-							src: [ 'project/files/', 'generated/version-x/' ]
+							prefix: '/v/x',
+							src: [ 'project/files/', 'generated/v/x/' ]
 						},
 						{
 							prefix: '/preview',
@@ -179,7 +188,8 @@ module.exports = function(grunt) {
 					],
 					variables: {
 						projectUrl: '',
-						versionDir: 'version-x' // replace occurrences of <%= versionDir %> with this during development
+						versionDir: 'v/x', // replace occurrences of <%= versionDir %> with this during development
+						production: 'false'
 					}
 				}
 			}
@@ -198,7 +208,8 @@ module.exports = function(grunt) {
 				options: {
 					variables: {
 						projectUrl: '<%= projectUrl %>',
-						versionDir: '<%= versionDir %>'
+						versionDir: '<%= versionDir %>',
+						production: 'true'
 					}
 				}
 			},
@@ -342,9 +353,6 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'build', [
 		// clear out previous build
 		'clean:build',
-
-		// lint code
-		'jshint',
 
 		// build our min.css, without debugging info
 		'sass:build',
