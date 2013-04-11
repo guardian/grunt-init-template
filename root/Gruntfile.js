@@ -53,7 +53,9 @@ module.exports = function(grunt) {
 
 		// Lint .js files in the src/js folder
 		jshint: {
-			files: 'project/src/v/x/js/**/*.js',
+			files: ['project/src/v/x/js/**/*.js', 
+			//exclude these files:
+			'!project/src/v/x/js/almond.js', '!project/src/v/x/js/require.js', '!project/src/v/x/js/lib/**/*.js'],
 			options: { jshintrc: '.jshintrc' }
 		},
 
@@ -378,6 +380,9 @@ module.exports = function(grunt) {
 		// clear out previous build
 		'clean:build',
 		'clean:tmp',
+
+		//Lint js files!
+		'jshint',
 
 		// copy files from project/files to build/version and from project/boot to build/boot
 		'copy:files',
