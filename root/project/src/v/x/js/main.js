@@ -3,7 +3,7 @@
 	'use strict';
 
 	require.config({
-		baseUrl: '<%= projectUrl %>/<%= versionDir %>/js',
+		baseUrl: '<%= projectUrl %><%= versionDir %>js',
 		paths: {
 			$: 'lib/jquery.amd'
 		}

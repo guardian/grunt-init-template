@@ -8,14 +8,15 @@ module.exports = function(grunt) {
 		// Deployment-related stuff
 		guid: '{%= guid %}',
 
-		baseUrl: 'http://interactive.guim.co.uk',
+		baseUrl: 'http://interactive.guim.co.uk/',
 
-		projectPath: '{%= path %}',
-		versionDir: 'v/<%= version %>',
-		versionPath: '<%= projectPath %>/<%= versionDir %>',
+		projectPath: '{%= path %}/',
+		version: 'x',
+		versionDir: 'v/<%= version %>/',
+		versionPath: '<%= projectPath %><%= versionDir %>',
 		
-		projectUrl: '<%= baseUrl %>/<%= projectPath %>',
-		versionUrl: '<%= baseUrl %>/<%= projectPath %>/<%= versionDir %>',
+		projectUrl: '<%= baseUrl %><%= projectPath %>',
+		versionUrl: '<%= baseUrl %><%= projectPath %><%= versionDir %>',
 
 		s3: {
 			bucket: 'gdn-cdn'
@@ -25,33 +26,34 @@ module.exports = function(grunt) {
 		// the relevant tasks will execute
 		watch: {
 			sass: {
-				files: 'project/styles/**/*.scss',
+				files: 'project/src/v/x/styles/**/*.scss',
 				tasks: 'sass',
 				interrupt: true
 			},
+			files: {
+				files: 'project/src/v/x/files/**/*',
+				tasks: 'copy:filesdev',
+				interrupt: true
+			},
 			data: {
-				files: 'project/data/**/*',
+				files: 'project/src/v/x/data/**/*',
 				tasks: 'dir2json:dev',
 				interrupt: true
 			},
-			codeobject: {
-				files: 'project/codeobject.html',
-				tasks: 'replaceTags:codeobject'
+			root: {
+				files: 'project/src/*.*',
+				tasks: 'replaceTags:dev'
 			},
-			index: {
-				files: 'project/index.html',
-				tasks: 'replaceTags:devIndex'
-			},
-			main: {
-				files: 'project/main.js',
-				tasks: 'replaceTags:devMain'
+			js: {
+				files: 'project/src/v/x/js/**',
+				tasks: 'replaceTags:dev'
 			}
 		},
 
 
 		// Lint .js files in the src/js folder
 		jshint: {
-			files: 'project/**/*.js',
+			files: 'project/src/v/x/js/**/*.js',
 			options: { jshintrc: '.jshintrc' }
 		},
 
@@ -69,13 +71,13 @@ module.exports = function(grunt) {
 			options: { style: 'compressed' },
 			dev: {
 				files: {
-					'generated/v/x/min.css': 'project/styles/**/*.scss'
+					'generated/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
 				},
 				options: { debugInfo: true }
 			},
 			build: {
 				files: {
-					'build/version/min.css': 'project/styles/**/*.scss'
+					'build/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
 				}
 			}
 		},
@@ -84,11 +86,11 @@ module.exports = function(grunt) {
 		requirejs: {
 			compile: {
 				options: {
-					baseUrl: 'tmp/build/js/',
-					out: 'build/version/js/main.js',
+					baseUrl: 'build/v/x/js/',
+					out: 'build/v/x/js/main.js',
 					name: 'almond',
 					include: 'main',
-					mainConfigFile: 'tmp/build/js/main.js',
+					mainConfigFile: 'build/v/x/js/main.js',
 					wrap: true,
 					optimize: 'uglify2',
 					uglify2: {
@@ -103,50 +105,74 @@ module.exports = function(grunt) {
 
 		// Copy files
 		copy: {
-			version: {
+			files: {
 				files: [{
 					expand: true,
-					cwd: 'project/files',
+					cwd: 'project/src/v/x/files',
 					src: ['**'],
-					dest: 'build/version/'
+					dest: 'build/v/x/files/'
 				}]
 			},
 			boot: {
 				files: [{
 					expand: true,
-					cwd: 'project/boot',
-					src: ['**'],
-					dest: 'build/boot/'
+					cwd: 'project/',
+					src: ['*.*'],
+					dest: 'build/'
 				}]
-			}
+			},
+			filesdev: {
+				files: [{
+					expand: true,
+					cwd: 'project/src/v/x/files',
+					src: ['**'],
+					dest: 'generated/v/x/files/'
+				}]
+			},
+			bootdev: {
+				files: [{
+					expand: true,
+					cwd: 'project/src/',
+					src: ['*.*'],
+					dest: 'generated/'
+				}]
+			},
+			jsdev: {
+				files: [{
+					expand: true,
+					cwd: 'project/src/v/x/js',
+					src: ['**'],
+					dest: 'generated/v/x/js'
+				}]
+			},
 		},
 
 		// Compress any CSS in the boot folder
 		cssmin: { build: { files: [{
 			expand: true,
-			cwd: 'tmp/build/boot',
-			src: '**/*.css',
-			dest: 'build/boot/'
+			cwd: 'tmp/build/',
+			src: '*.css',
+			dest: 'build/'
 		}] } },
 
 		// Minify any JS in the boot folder
 		uglify: { build: { files: [{
 			expand: true,
-			cwd: 'tmp/build/boot',
-			src: '**/*.js',
-			dest: 'build/boot/'
+			cwd: 'tmp/build/',
+			src: '*.js',
+			dest: 'build/'
 		}] } },
 		
 		// Combine contents of `project/data` into a single `data.json` file
 		dir2json: {
 			dev: {
-				root: 'project/data/',
-				dest: 'generated/v/x/data.json',
+				root: 'project/src/v/x/data/',
+				dest: 'generated/v/x/data/data.json',
 				options: { space: '\t' }
 			},
 			build: {
-				root: 'project/data/',
-				dest: 'build/version/data.json'
+				root: 'project/src/v/x/data/',
+				dest: 'build/v/x/data/data.json'
 			}
 		},
 
@@ -201,46 +227,36 @@ module.exports = function(grunt) {
 			build: {
 				files: [{
 					expand: true,
-					cwd: 'project/',
-					src: [ 'js/**/*', 'boot/**/*', 'codeobject.html' ],
-					dest: 'tmp/build/'
+					cwd: 'project/src/',
+					src: [ '*.*' , 'v/x/js/**/*'],
+					dest: 'build/'
 				}],
 				options: {
 					variables: {
 						projectUrl: '<%= projectUrl %>',
 						versionDir: '<%= versionDir %>',
-						production: 'true'
-					}
-				}
-			},
-			buildIndex: {
-				src: 'project/index.html',
-				dest: 'build/boot/index.html',
-				options: {
-					variables: {
+						production: false,
 						codeobject: function () {
-							return grunt.file.read( 'tmp/build/codeobject.html' );
+							return grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' );
 						}
 					}
 				}
 			},
-			devIndex: {
-				src: 'project/index.html',
-				dest: 'generated/index.html',
+			dev: {
+				files: [{
+					expand: true,
+					cwd: 'project/src/',
+					src: [ '*.*' , 'v/x/js/**/*'],
+					dest: 'generated/'
+				}],
 				options: {
 					variables: {
+						projectUrl: './',
+						versionDir: 'v/x/',
+						production: false,
 						codeobject: function () {
-							return grunt.file.read( 'project/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, '' );
+							return grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' );
 						}
-					}
-				}
-			},
-			codeobject: {
-				src: 'project/codeobject.html',
-				dest: 'build/codeobject.html',
-				options: {
-					variables: {
-						projectUrl: '<%= projectUrl %>'
 					}
 				}
 			}
@@ -291,17 +307,25 @@ module.exports = function(grunt) {
 				}
 			},
 			version: {
+				files: [{
+					expand: true,
+					cwd: 'build/v/x/',
+					src: [ '**/*' ]
+				}],
 				options: {
-					root: 'build/version/',
 					pathPrefix: '<%= versionPath %>',
 					params: {
 						CacheControl: 'max-age=31536000'
 					}
 				}
 			},
-			boot: {
+			root: {
+				files: [{
+					expand: true,
+					cwd: 'build/',
+					src: [ '*.*' ]
+				}],
 				options: {
-					root: 'build/boot/',
 					pathPrefix: '<%= projectPath %>',
 					params: {
 						CacheControl: 'max-age=20'
@@ -313,7 +337,7 @@ module.exports = function(grunt) {
 		// shell commands
 		shell: {
 			open: {
-				command: 'open <%= projectUrl %>/index.html'
+				command: 'open <%= projectUrl %>index.html'
 			}
 		}
 
@@ -342,10 +366,10 @@ module.exports = function(grunt) {
 	
 	// default task - compile .scss files and flatten data
 	grunt.registerTask( 'default', [
+		'copy:filesdev',
 		'sass:dev',
 		'dir2json:dev',
-		//'replaceTags:devCodeobject',
-		'replaceTags:devIndex',
+		'replaceTags:dev',
 		'watch'
 	]);
 
@@ -353,27 +377,28 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'build', [
 		// clear out previous build
 		'clean:build',
+		'clean:tmp',
+
+		// copy files from project/files to build/version and from project/boot to build/boot
+		'copy:files',
+		'copy:boot',
 
 		// build our min.css, without debugging info
 		'sass:build',
 		'dir2json:build',
 
+
 		// add project URL and version information to files
 		'replaceTags:build',
-		'replaceTags:buildIndex',
 
 		// optimise JS
 		'requirejs',
 
-		// copy files from project/files to build/version and from project/boot to build/boot
-		'copy',
 
 		// optimise JS and CSS from the boot folder
 		'cssmin:build',
 		'uglify:build',
 
-		// generate a codeobject (in build/) that can be used to embed this interactive wherever
-		'replaceTags:codeobject'
 	]);
 
 	// launch sequence
@@ -393,7 +418,7 @@ module.exports = function(grunt) {
 		'lockProject',
 		'uploadToS3:manifest',
 		'uploadToS3:version',
-		'uploadToS3:boot',
+		'uploadToS3:root',
 		'lockProject:unlock',
 
 		// point browser at newly deployed project

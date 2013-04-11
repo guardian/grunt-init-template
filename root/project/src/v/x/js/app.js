@@ -1,10 +1,10 @@
 /*global define, window */
 
-define( [ '$' ],
-
-function ( $ ) {
+define(function ( require ) {
 
 	'use strict';
+	
+	var $ = require('$');
 	
 	var app;
 
@@ -22,8 +22,11 @@ function ( $ ) {
 
 
 	// load our app data
-	deferreds.data = $.ajax( '<%= projectUrl %>/<%= versionDir %>/data.json' ).done( function ( data ) {
+	deferreds.data = new $.Deferred();
+
+	$.ajax( '<%= projectUrl %><%= versionDir %>data/data.json' ).done( function ( data ) {
 		app.data = data;
+		deferreds.data.resolve();
 	}).fail( function () {
 		throw new Error( 'Run grunt to create the data.json file, then reload' );
 	});
