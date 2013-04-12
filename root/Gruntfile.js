@@ -3,6 +3,38 @@ module.exports = function(grunt) {
 
 	'use strict';
 
+
+
+	//Create some functions for replacing tags in documents
+	var tagReplacer = function(tags){
+		console.log(tags);
+		var replacer = function(content, srcpath){
+			for(var tagName in tags){
+				var tagValue = grunt.config.process(tags[tagName]);
+				var regex = new RegExp("<%=\\s*"+tagName+"\\s*%>", "g");
+				content = content.replace(regex, tagValue);
+			}
+			return content;
+		};
+		return replacer;
+	};
+	//Tag replacer for dev
+	var devTagReplacer = tagReplacer({
+		projectUrl: './',
+		versionDir: 'v/x/',
+		production: false,
+		codeobject: grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
+	});
+	//Tag replacer for build
+	var buildTagReplacer = tagReplacer({
+		projectUrl: '<%= projectUrl %>',
+		versionDir: '<%= versionDir %>',
+		production: true,
+		codeobject: grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
+	});
+
+
+
 	grunt.initConfig({
 		
 		// Deployment-related stuff
@@ -30,23 +62,25 @@ module.exports = function(grunt) {
 				tasks: 'sass',
 				interrupt: true
 			},
-			files: {
-				files: 'project/src/v/x/files/**/*',
-				tasks: 'copy:filesdev',
-				interrupt: true
-			},
 			data: {
 				files: 'project/src/v/x/data/**/*',
 				tasks: 'dir2json:dev',
 				interrupt: true
 			},
+			files: {
+				files: 'project/src/v/x/files/**/*',
+				tasks: 'copy:filesdev',
+				interrupt: true
+			},
 			root: {
 				files: 'project/src/*.*',
-				tasks: 'replaceTags:dev'
+				tasks: 'copy:rootdev',
+				interrupt: true
 			},
 			js: {
 				files: 'project/src/v/x/js/**',
-				tasks: 'replaceTags:dev'
+				tasks: 'copy:jsdev',
+				interrupt: true
 			}
 		},
 
@@ -113,15 +147,32 @@ module.exports = function(grunt) {
 					cwd: 'project/src/v/x/files',
 					src: ['**'],
 					dest: 'build/v/x/files/'
-				}]
+				}],
+				options: {
+					processContent: buildTagReplacer
+				}
 			},
 			root: {
 				files: [{
 					expand: true,
-					cwd: 'project/',
+					cwd: 'project/src/',
 					src: ['*.*'],
 					dest: 'build/'
-				}]
+				}],
+				options: {
+					processContent: buildTagReplacer
+				}
+			},
+			js: {
+				files: [{
+					expand: true,
+					cwd: 'project/src/v/x/js',
+					src: ['**'],
+					dest: 'build/v/x/js'
+				}],
+				options: {
+					processContent: buildTagReplacer
+				}
 			},
 			filesdev: {
 				files: [{
@@ -129,7 +180,10 @@ module.exports = function(grunt) {
 					cwd: 'project/src/v/x/files',
 					src: ['**'],
 					dest: 'generated/v/x/files/'
-				}]
+				}],
+				options: {
+					processContent: devTagReplacer
+				}
 			},
 			rootdev: {
 				files: [{
@@ -137,7 +191,10 @@ module.exports = function(grunt) {
 					cwd: 'project/src/',
 					src: ['*.*'],
 					dest: 'generated/'
-				}]
+				}],
+				options: {
+					processContent: devTagReplacer
+				}
 			},
 			jsdev: {
 				files: [{
@@ -145,25 +202,35 @@ module.exports = function(grunt) {
 					cwd: 'project/src/v/x/js',
 					src: ['**'],
 					dest: 'generated/v/x/js'
-				}]
+				}],
+				options: {
+					processContent: devTagReplacer
+				}
 			},
 		},
 
 		// Compress any CSS in the root folder
-		cssmin: { build: { files: [{
-			expand: true,
-			cwd: 'tmp/build/',
-			src: '*.css',
-			dest: 'build/'
-		}] } },
+		cssmin: {
+			build: {
+				files: [{
+					expand: true,
+					cwd: 'tmp/build/',
+					src: '*.css',
+					dest: 'build/'
+				}]
+			}
+		},
 
 		// Minify any JS in the root folder
-		uglify: { build: { files: [{
-			expand: true,
-			cwd: 'tmp/build/',
-			src: '*.js',
-			dest: 'build/'
-		}] } },
+		uglify: {
+			build: {
+				files: [{
+				expand: true,
+				cwd: 'build/',
+				src: '*.js',
+				dest: 'build/'}]
+			}
+		},
 		
 		// Combine contents of `project/data` into a single `data.json` file
 		dir2json: {
@@ -222,48 +289,6 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-
-		
-		// Replace <%= tags %> with the specified variables
-		replaceTags: {
-			build: {
-				files: [{
-					expand: true,
-					cwd: 'project/src/',
-					src: [ '*.*' , 'v/x/js/**/*'],
-					dest: 'build/'
-				}],
-				options: {
-					variables: {
-						projectUrl: '<%= projectUrl %>',
-						versionDir: '<%= versionDir %>',
-						production: true,
-						codeobject: function () {
-							return grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' );
-						}
-					}
-				}
-			},
-			dev: {
-				files: [{
-					expand: true,
-					cwd: 'project/src/',
-					src: [ '*.*' , 'v/x/js/**/*'],
-					dest: 'generated/'
-				}],
-				options: {
-					variables: {
-						projectUrl: './',
-						versionDir: 'v/x/',
-						production: false,
-						codeobject: function () {
-							return grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' );
-						}
-					}
-				}
-			}
-		},
-
 
 		// Download from S3
 		downloadFromS3: {
@@ -368,10 +393,11 @@ module.exports = function(grunt) {
 	
 	// default task - compile .scss files and flatten data
 	grunt.registerTask( 'default', [
+		'copy:rootdev',
+		'copy:jsdev',
 		'copy:filesdev',
 		'sass:dev',
 		'dir2json:dev',
-		'replaceTags:dev',
 		'watch'
 	]);
 
@@ -385,20 +411,16 @@ module.exports = function(grunt) {
 		'jshint',
 
 		// copy files from project/files to build/v/x/files and from project root to build root
-		'copy:files',
 		'copy:root',
+		'copy:js',
+		'copy:files',
 
 		// build our min.css, without debugging info
 		'sass:build',
 		'dir2json:build',
 
-
-		// add project URL and version information to files
-		'replaceTags:build',
-
 		// optimise JS
 		'requirejs',
-
 
 		// optimise JS and CSS from the root folder
 		'cssmin:build',
