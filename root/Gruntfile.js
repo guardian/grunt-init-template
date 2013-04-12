@@ -7,7 +7,6 @@ module.exports = function(grunt) {
 
 	//Create some functions for replacing tags in documents
 	var tagReplacer = function(tags){
-		console.log(tags);
 		var replacer = function(content, srcpath){
 			for(var tagName in tags){
 				var tagValue = grunt.config.process(tags[tagName]);
