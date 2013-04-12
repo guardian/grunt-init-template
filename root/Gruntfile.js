@@ -58,7 +58,7 @@ module.exports = function(grunt) {
 		watch: {
 			sass: {
 				files: 'project/src/v/x/styles/**/*.scss',
-				tasks: 'sass',
+				tasks: 'sass:dev',
 				interrupt: true
 			},
 			data: {
@@ -103,7 +103,6 @@ module.exports = function(grunt) {
 
 		// Compile .scss files
 		sass: {
-			options: { style: 'compressed' },
 			dev: {
 				files: {
 					'generated/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
@@ -113,7 +112,8 @@ module.exports = function(grunt) {
 			build: {
 				files: {
 					'build/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
-				}
+				},
+				options: { style: 'compressed' }
 			}
 		},
 		
