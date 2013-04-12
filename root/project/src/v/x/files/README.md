@@ -1,1 +1,1 @@
-This folder is for artwork, scripts, raggedy Excel files, whatever you need to create the project that you don't want to be included in the build.
+This folder is for assets used by the project. Images, sounds, etc. Anything that is not stylesheets, data or javascript.

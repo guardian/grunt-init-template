@@ -31,7 +31,7 @@ define(function ( require ) {
 	// when we have DOM ready and data ready, proceed
 	$.when( deferreds.dom, deferreds.data ).done( function () {
 		
-		app.el = $( '#GuiTemplate5' );
+		app.el = $( '#Gui{%= Name %}' );
 
 		app.el.fadeOut( function () {
 			app.el.html( app.data.scaffolding ).fadeIn();
