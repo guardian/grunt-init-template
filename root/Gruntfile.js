@@ -115,7 +115,7 @@ module.exports = function(grunt) {
 					dest: 'build/v/x/files/'
 				}]
 			},
-			boot: {
+			root: {
 				files: [{
 					expand: true,
 					cwd: 'project/',
@@ -131,7 +131,7 @@ module.exports = function(grunt) {
 					dest: 'generated/v/x/files/'
 				}]
 			},
-			bootdev: {
+			rootdev: {
 				files: [{
 					expand: true,
 					cwd: 'project/src/',
@@ -149,7 +149,7 @@ module.exports = function(grunt) {
 			},
 		},
 
-		// Compress any CSS in the boot folder
+		// Compress any CSS in the root folder
 		cssmin: { build: { files: [{
 			expand: true,
 			cwd: 'tmp/build/',
@@ -157,7 +157,7 @@ module.exports = function(grunt) {
 			dest: 'build/'
 		}] } },
 
-		// Minify any JS in the boot folder
+		// Minify any JS in the root folder
 		uglify: { build: { files: [{
 			expand: true,
 			cwd: 'tmp/build/',
@@ -198,7 +198,7 @@ module.exports = function(grunt) {
 						},
 						{
 							prefix: '/',
-							src: [ 'generated/', 'project/boot/' ]
+							src: [ 'generated/', 'project/root/' ]
 						},
 						{
 							prefix: '/readme',
@@ -384,9 +384,9 @@ module.exports = function(grunt) {
 		//Lint js files!
 		'jshint',
 
-		// copy files from project/files to build/version and from project/boot to build/boot
+		// copy files from project/files to build/v/x/files and from project root to build root
 		'copy:files',
-		'copy:boot',
+		'copy:root',
 
 		// build our min.css, without debugging info
 		'sass:build',
@@ -400,7 +400,7 @@ module.exports = function(grunt) {
 		'requirejs',
 
 
-		// optimise JS and CSS from the boot folder
+		// optimise JS and CSS from the root folder
 		'cssmin:build',
 		'uglify:build',
 
