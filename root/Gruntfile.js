@@ -237,7 +237,7 @@ module.exports = function(grunt) {
 					variables: {
 						projectUrl: '<%= projectUrl %>',
 						versionDir: '<%= versionDir %>',
-						production: false,
+						production: true,
 						codeobject: function () {
 							return grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' );
 						}
