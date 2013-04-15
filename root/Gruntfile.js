@@ -17,6 +17,7 @@ module.exports = function(grunt) {
 		};
 		return replacer;
 	};
+
 	//Tag replacer for dev
 	var devTagReplacer = tagReplacer({
 		projectUrl: './',
@@ -146,10 +147,7 @@ module.exports = function(grunt) {
 					cwd: 'project/src/v/x/files',
 					src: ['**'],
 					dest: 'build/v/x/files/'
-				}],
-				options: {
-					processContent: buildTagReplacer
-				}
+				}]
 			},
 			root: {
 				files: [{
@@ -179,10 +177,7 @@ module.exports = function(grunt) {
 					cwd: 'project/src/v/x/files',
 					src: ['**'],
 					dest: 'generated/v/x/files/'
-				}],
-				options: {
-					processContent: devTagReplacer
-				}
+				}]
 			},
 			rootdev: {
 				files: [{
