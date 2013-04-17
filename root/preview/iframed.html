@@ -10,7 +10,7 @@
 
 <body>
 	<h1><span id='form'></span> &ndash; <span id='width'></span>x<span id='height'></span></h1>
-	<p><a href='/preview.html'>&laquo; back to preview list</a></p>
+	<p><a href='./index.html'>&laquo; back to preview list</a></p>
 	<p>Your mileage may vary! Test thoroughly on real devices. Mobile device simulations assume we have the following meta tag:</p>
 	<code>&lt;meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'&gt;</code>
 
@@ -19,41 +19,26 @@
 	<!-- JS -->
 	<script>
 		window.onload = function () {
-			var container, iframe, query, match, width, height, widthSpan, heightSpan;
 
-			query = window.location.search;
+            function getURLParameter(name) {
+                return decodeURIComponent((RegExp('[?|&]' + name + '=' + '(.+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20')) || null;
+            }
 
-			match = /form=([^&]+)/.exec( query );
-			if ( match ) {
-				form = decodeURIComponent( match[1] );
-			} else {
-				form = 'iframe'
-			}
+            var form = getURLParameter('form') || 'iframe';
+            var width = parseInt(getURLParameter('width')) || 940;
+            var height = parseInt(getURLParameter('height')) || 600;
+            var src = getURLParameter('src') || '../generated/index.html';
 
-			match = /width=([0-9]+)/.exec( query );
-			if ( match ) {
-				width = +match[1];
-			} else {
-				width = 940;
-			}
-
-			match = /height=([0-9]+)/.exec( query );
-			if ( match ) {
-				height = +match[1];
-			} else {
-				width = 600;
-			}
-
-			iframe = document.createElement( 'iframe' );
-			iframe.src = '/index.html';
+            var iframe = document.createElement('iframe');
 			iframe.width = width;
-			iframe.height = height;
+            iframe.height = height;
+            iframe.src = src;
 
-			document.getElementById( 'form' ).innerHTML = form;
-			document.getElementById( 'width' ).innerHTML = width;
-			document.getElementById( 'height' ).innerHTML = height;
+			document.getElementById('form').innerHTML = form;
+			document.getElementById('width').innerHTML = ''+width;
+			document.getElementById('height').innerHTML = ''+height;
 
-			document.getElementById( 'container' ).appendChild( iframe );
+			document.getElementById('container').appendChild(iframe);
 		}
 	</script>
 </body>
