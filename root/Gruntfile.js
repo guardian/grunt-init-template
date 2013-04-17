@@ -3,8 +3,6 @@ module.exports = function(grunt) {
 
 	'use strict';
 
-
-
 	//Create some functions for replacing tags in documents
 	var tagReplacer = function(tags){
 		var replacer = function(content, srcpath){
@@ -246,18 +244,6 @@ module.exports = function(grunt) {
 				options: {
 					mappings: [
 						{
-							prefix: '/v/x/js',
-							src: 'project/js/'
-						},
-						{
-							prefix: '/v/x',
-							src: [ 'project/files/', 'generated/v/x/' ]
-						},
-						{
-							prefix: '/preview',
-							src: 'preview/'
-						},
-						{
 							prefix: '/',
 							src: [ 'generated/', 'project/root/' ]
 						},
@@ -271,7 +257,7 @@ module.exports = function(grunt) {
 
 								style = "<style>body {font-family: 'Helvetica Neue', 'Arial'; font-size: 16px; color: #333; } pre { background-color: #eee; padding: 0.5em; } hr { margin: 2em 0 }</style>";
 
-								return style + html;
+								return "<html><head>" + style + "</head><body>" + html + "</body></html>";
 							}
 						}
 					],
@@ -385,13 +371,18 @@ module.exports = function(grunt) {
 	
 
 	
-	// default task - compile .scss files and flatten data
-	grunt.registerTask( 'default', [
+	// generate a runnable build for developing
+	grunt.registerTask( 'generate', [
 		'copy:rootdev',
 		'copy:jsdev',
 		'copy:filesdev',
 		'sass:dev',
-		'dir2json:dev',
+		'dir2json:dev'
+	]);
+
+	// default task - generate dev build and watch for changes
+	grunt.registerTask( 'default', [
+		'generate',
 		'watch'
 	]);
 
