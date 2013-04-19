@@ -224,7 +224,7 @@ module.exports = function(grunt) {
 			}
 		},
 		
-		// Combine contents of `project/data` into a single `data.json` file
+		// Combine contents of `project/src/v/x/data` into a single `data.json` file
 		dir2json: {
 			dev: {
 				root: 'project/src/v/x/data/',
