@@ -237,39 +237,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// Launch a development server, which looks for requested URLs in the folders below
-		server: {
-			options: { port: 80 }, // you have to do `sudo grunt server` to use port 80 (fonts etc won't work unless it's port 80)
-			dev: {
-				options: {
-					mappings: [
-						{
-							prefix: '/',
-							src: [ 'generated/', 'project/root/' ]
-						},
-						{
-							prefix: '/readme',
-							src: function ( req ) {
-								var markdown, html, style;
-
-								markdown = grunt.file.read( 'README.md' );
-								html = require( 'markdown' ).markdown.toHTML( markdown );
-
-								style = "<style>body {font-family: 'Helvetica Neue', 'Arial'; font-size: 16px; color: #333; } pre { background-color: #eee; padding: 0.5em; } hr { margin: 2em 0 }</style>";
-
-								return "<html><head>" + style + "</head><body>" + html + "</body></html>";
-							}
-						}
-					],
-					variables: {
-						projectUrl: '',
-						versionDir: 'v/x', // replace occurrences of <%= versionDir %> with this during development
-						production: 'false'
-					}
-				}
-			}
-		},
-
 		// Download from S3
 		downloadFromS3: {
 			options: {
