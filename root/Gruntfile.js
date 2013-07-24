@@ -21,14 +21,14 @@ module.exports = function(grunt) {
 		projectUrl: './',
 		versionDir: 'v/x/',
 		production: false,
-		codeobject: grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
+		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
 	});
 	//Tag replacer for build
 	var buildTagReplacer = tagReplacer({
 		projectUrl: '<%= projectUrl %>',
 		versionDir: '<%= versionDir %>',
 		production: true,
-		codeobject: grunt.file.read( 'project/src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
+		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
 	});
 
 
@@ -56,27 +56,27 @@ module.exports = function(grunt) {
 		// the relevant tasks will execute
 		watch: {
 			sass: {
-				files: 'project/src/v/x/styles/**/*.scss',
+				files: 'src/v/x/styles/**/*.scss',
 				tasks: 'sass:dev',
 				interrupt: true
 			},
 			data: {
-				files: 'project/src/v/x/data/**/*',
+				files: 'src/v/x/data/**/*',
 				tasks: 'dir2json:dev',
 				interrupt: true
 			},
 			files: {
-				files: 'project/src/v/x/files/**/*',
+				files: 'src/v/x/files/**/*',
 				tasks: 'copy:filesdev',
 				interrupt: true
 			},
 			root: {
-				files: 'project/src/*.*',
+				files: 'src/*.*',
 				tasks: 'copy:rootdev',
 				interrupt: true
 			},
 			js: {
-				files: 'project/src/v/x/js/**',
+				files: 'src/v/x/js/**',
 				tasks: 'copy:jsdev',
 				interrupt: true
 			}
@@ -85,9 +85,9 @@ module.exports = function(grunt) {
 
 		// Lint .js files in the src/js folder
 		jshint: {
-			files: ['project/src/v/x/js/**/*.js', 
+			files: ['src/v/x/js/**/*.js', 
 			//exclude these files:
-			'!project/src/v/x/js/almond.js', '!project/src/v/x/js/require.js', '!project/src/v/x/js/lib/**/*.js'],
+			'!src/v/x/js/lib/**/*.js'],
 			options: { jshintrc: '.jshintrc' }
 		},
 
@@ -104,13 +104,13 @@ module.exports = function(grunt) {
 		sass: {
 			dev: {
 				files: {
-					'generated/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
+					'generated/v/x/styles/min.css': 'src/v/x/styles/**/*.scss'
 				},
 				options: { debugInfo: true }
 			},
 			build: {
 				files: {
-					'build/v/x/styles/min.css': 'project/src/v/x/styles/**/*.scss'
+					'build/v/x/styles/min.css': 'src/v/x/styles/**/*.scss'
 				},
 				options: { style: 'compressed' }
 			}
@@ -142,7 +142,7 @@ module.exports = function(grunt) {
 			files: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/v/x/files',
+					cwd: 'src/v/x/files',
 					src: ['**'],
 					dest: 'build/v/x/files/'
 				}]
@@ -150,7 +150,7 @@ module.exports = function(grunt) {
 			root: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/',
+					cwd: 'src/',
 					src: ['*.*'],
 					dest: 'build/'
 				}],
@@ -161,7 +161,7 @@ module.exports = function(grunt) {
 			js: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/v/x/js',
+					cwd: 'src/v/x/js',
 					src: ['**'],
 					dest: 'build/v/x/js'
 				}],
@@ -172,7 +172,7 @@ module.exports = function(grunt) {
 			filesdev: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/v/x/files',
+					cwd: 'src/v/x/files',
 					src: ['**'],
 					dest: 'generated/v/x/files/'
 				}]
@@ -180,7 +180,7 @@ module.exports = function(grunt) {
 			rootdev: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/',
+					cwd: 'src/',
 					src: ['*.*'],
 					dest: 'generated/'
 				}],
@@ -191,7 +191,7 @@ module.exports = function(grunt) {
 			jsdev: {
 				files: [{
 					expand: true,
-					cwd: 'project/src/v/x/js',
+					cwd: 'src/v/x/js',
 					src: ['**'],
 					dest: 'generated/v/x/js'
 				}],
@@ -224,15 +224,15 @@ module.exports = function(grunt) {
 			}
 		},
 		
-		// Combine contents of `project/src/v/x/data` into a single `data.json` file
+		// Combine contents of `src/v/x/data` into a single `data.json` file
 		dir2json: {
 			dev: {
-				root: 'project/src/v/x/data/',
+				root: 'src/v/x/data/',
 				dest: 'generated/v/x/data/data.json',
 				options: { space: '\t' }
 			},
 			build: {
-				root: 'project/src/v/x/data/',
+				root: 'src/v/x/data/',
 				dest: 'build/v/x/data/data.json'
 			}
 		},
