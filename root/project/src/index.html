@@ -9,6 +9,24 @@
 </head>
 
 <body>
-<%= codeobject %>
+
+	<%= codeobject %>
+
+	<script src='require.min.js'></script>
+
+	<script>
+		require([ 'boot' ], function ( boot ) {
+			var init = function () {
+				var el = document.getElementsByTagName( 'figure' )[0];
+				boot.boot( el, window );
+			};
+
+			if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
+				init();
+			} else {
+				window.onload = init;
+			}
+		});
+	</script>
 </body>
 </html>

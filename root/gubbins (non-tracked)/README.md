@@ -1,0 +1,1 @@
+Items in this folder will be ignored by git. It is therefore a good place to put large files that you're temporarily working with

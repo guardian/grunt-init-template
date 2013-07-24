@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+	<meta charset='utf-8'>
+	<title>Previewing "{%= name %}"</title>
+
+	<!-- CSS -->
+	<style type='text/css'>
+		body {
+			font-family: 'Helvetica Neue', 'Arial';
+			font-size: 16px;
+			color: #333;
+		}
+
+		#container {
+			width: 9999px;
+		}
+
+		.left {
+			float: left;
+			width: 12em;
+			padding: 0 0.5em 0 0;
+		}
+
+		iframe {
+			float: left;
+			border: 1px solid #999;
+			margin: 0 0 1em 0;
+		}
+
+		code {
+			margin: 0 0 20px 0;
+			display: inline-block;
+		}
+
+		ul {
+			width: 100%;
+			margin: 0 0 1em 0;
+			padding: 0;
+		}
+
+		.size-option {
+			list-style: none;
+			text-align: center;
+			padding: 0.5em;
+			margin: 0 0 0.5em 0;
+			background-color: #f9f9f9;
+			cursor: pointer;
+		}
+
+		.size-option:hover {
+			background-color: #eee;
+		}
+
+		.selected, .selected:hover {
+			background-color: #666;
+			color: white;
+		}
+
+		.size-option strong, .size-option span {
+			display: block;
+		}
+
+		.custom-dimensions {
+			text-align: center;
+			position: relative;
+			padding: 0.5em;
+			margin: 0 0 0.5em 0;
+		}
+
+		.custom-dimensions input {
+			position: absolute;
+			width: 40%;
+			height: 100%;
+			top: 0;
+			font-size: inherit;
+			font-family: inherit;
+			text-align: center;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+
+		.width {
+			left: 0;
+		}
+
+		.height {
+			right: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Previewing "{%= name %}"</h1>
+	<p>Your mileage may vary! Test thoroughly on real devices. Mobile device simulations assume we have the following meta tag:</p>
+	<code>&lt;meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'&gt;</code>
+
+	<div id='container'></div>
+
+
+	
+
+	<!-- Template -->
+	<script id='main' type='text/ractive'>
+		<div class='left'>
+			<div class='custom-dimensions'>
+				<input class='width' value='{{previewWidth}}' proxy-input='redraw'>
+				x
+				<input class='height' value='{{previewHeight}}' proxy-input='redraw'>
+			</div>
+
+			<ul>
+				{{#options}}
+					<li
+						class='size-option {{( ( width === previewWidth && height === previewHeight ) ? "selected" : "" )}}'
+						proxy-tap='select:[{{width}},{{height}}]'
+					>
+						<strong>{{description}}</strong>
+						<span>{{width}}x{{height}}</span>
+					</li>
+				{{/options}}
+			</ul>
+		</div>
+
+		<iframe src='./' width='{{previewWidth}}' height='{{previewHeight}}'></iframe>
+	</script>
+
+
+	<!-- JS -->
+	<script src='http://www.ractivejs.org/examples/lib/Ractive.js'></script>
+
+	<script>
+		window.onload = function () {
+
+			var ractive, redraw;
+
+			ractive = new Ractive({
+				el: 'container',
+				template: '#main',
+				data: {
+					previewWidth: 940,
+					previewHeight: 600,
+					options: [
+						{ description: 'Guardian wide', width: 940, height: 600 },
+						{ description: 'Guardian', width: 760, height: 600 },
+						{ description: 'iPad (landscape)', width: 1024, height: 768 },
+						{ description: 'iPad (portrait)', width: 768, height: 1024 },
+						{ description: 'iPhone (landscape)', width: 480, height: 320 },
+						{ description: 'iPhone (portrait)', width: 320, height: 480 },
+						{ description: 'iPhone 5 (landscape)', width: 568, height: 320 },
+						{ description: 'iPhone 5 (portrait)', width: 320, height: 568 },
+					]
+				}
+			});
+
+			redraw = function () {
+				// need to force a redraw when dimensions change, otherwise things go mental
+				ractive.el.style.display = 'none';
+				ractive.el.offsetHeight;
+				ractive.el.style.display = 'block';
+			};
+
+			ractive.on({
+				select: function ( event, dimensions ) {
+					this.set({
+						previewWidth: dimensions[0],
+						previewHeight: dimensions[1]
+					});
+
+					redraw();
+				},
+				redraw: redraw
+			});
+		}
+	</script>
+</body>
+</html>
