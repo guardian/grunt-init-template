@@ -10,19 +10,17 @@
 	},
 	"devDependencies": {
 		"grunt": "~0.4.0",
-		"grunt-contrib-jshint": "~0.1.1",
-		"grunt-contrib-uglify": "~0.1.1",
-		"grunt-contrib-watch": "~0.2.0",
-		"grunt-contrib-sass": "~0.2.2",
-		"grunt-contrib-cssmin": "~0.4.1",
-		"grunt-contrib-clean": "~0.4.0",
-		"grunt-contrib-uglify": "~0.1.2",
-		"grunt-contrib-requirejs": "~0.4.0",
-		"grunt-contrib-copy": "~0.4.0",
-		"grunt-shell": "~0.2.1",
-		"grunt-dir2json": "~0.1.0",
-		"grunt-gui": "git://github.com/GuardianInteractive/grunt-gui.git",
-		"markdown": "~0.4.0"
+		"grunt-contrib-jshint": "~0.6.0",
+		"grunt-contrib-uglify": "~0.2.2",
+		"grunt-contrib-watch": "~0.5.1",
+		"grunt-contrib-sass": "~0.4.1",
+		"grunt-contrib-cssmin": "~0.6.1",
+		"grunt-contrib-clean": "~0.5.0",
+		"grunt-contrib-requirejs": "~0.4.1",
+		"grunt-contrib-copy": "~0.4.1",
+		"grunt-shell": "~0.3.1",
+		"grunt-dir2json": "~0.1.5",
+		"grunt-gui": "git://github.com/GuardianInteractive/grunt-gui.git"
 	},
 	"jam": {
 		"packageDir": "project/js/jam"
