@@ -3,31 +3,31 @@ module.exports = function(grunt) {
 
 	'use strict';
 
+	var isProd = grunt.option( 'prod' );
+
 	//Create some functions for replacing tags in documents
-	var tagReplacer = function(tags){
-		var replacer = function(content, srcpath){
-			for(var tagName in tags){
-				var tagValue = grunt.config.process(tags[tagName]);
-				var regex = new RegExp("<%=\\s*"+tagName+"\\s*%>", "g");
+	var makeTagReplacer = function( tags ) {
+		
+		var replacer = function ( content, srcpath ) {
+			var tagName, tagValue, regex;
+
+			for ( tagName in tags ) {
+				tagValue = grunt.config.process( tags[ tagName ] );
+				regex = new RegExp( '<%=\\s*' + tagName + '\\s*%>', 'g' );
+				
 				content = content.replace(regex, tagValue);
 			}
+
 			return content;
 		};
+
 		return replacer;
 	};
 
-	//Tag replacer for dev
-	var devTagReplacer = tagReplacer({
-		projectUrl: './',
-		versionDir: 'v/x/',
-		production: false,
-		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
-	});
-	//Tag replacer for build
-	var buildTagReplacer = tagReplacer({
-		projectUrl: '<%= projectUrl %>',
-		versionDir: '<%= versionDir %>',
-		production: true,
+	var tagReplacer = makeTagReplacer({
+		projectUrl: isProd ? '<%= projectUrl %>' : './',
+		versionDir: isProd ? '<%= versionDir %>' : 'v/x/',
+		production: isProd,
 		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
 	});
 
@@ -43,10 +43,8 @@ module.exports = function(grunt) {
 		projectPath: '{%= path %}/',
 		version: 'x',
 		versionDir: 'v/<%= version %>/',
-		versionPath: '<%= projectPath %><%= versionDir %>',
 		
 		projectUrl: '<%= baseUrl %><%= projectPath %>',
-		versionUrl: '<%= baseUrl %><%= projectPath %><%= versionDir %>',
 
 		s3: {
 			bucket: 'gdn-cdn'
@@ -56,28 +54,31 @@ module.exports = function(grunt) {
 		// the relevant tasks will execute
 		watch: {
 			sass: {
-				files: 'src/v/x/styles/**/*.scss',
-				tasks: 'sass:dev',
-				interrupt: true
+				files: 'src/versioned/styles/**/*.scss',
+				tasks: 'sass',
+				interrupt: true,
+				options: {
+					livereload: true
+				}
 			},
 			data: {
-				files: 'src/v/x/data/**/*',
-				tasks: 'dir2json:dev',
+				files: 'src/versioned/data/**/*',
+				tasks: 'dir2json',
 				interrupt: true
 			},
 			files: {
-				files: 'src/v/x/files/**/*',
-				tasks: 'copy:filesdev',
+				files: 'src/versioned/files/**/*',
+				tasks: 'copy:files',
 				interrupt: true
 			},
 			root: {
 				files: 'src/*.*',
-				tasks: 'copy:rootdev',
+				tasks: 'copy:root',
 				interrupt: true
 			},
 			js: {
-				files: 'src/v/x/js/**',
-				tasks: 'copy:jsdev',
+				files: 'src/versioned/js/**',
+				tasks: 'copy:js',
 				interrupt: true
 			}
 		},
@@ -85,34 +86,35 @@ module.exports = function(grunt) {
 
 		// Lint .js files in the src/js folder
 		jshint: {
-			files: ['src/v/x/js/**/*.js', 
-			//exclude these files:
-			'!src/v/x/js/lib/**/*.js'],
-			options: { jshintrc: '.jshintrc' }
+			files: [
+				'src/versioned/js/**/*.js', 
+				
+				//exclude these files:
+				'!src/versioned/js/lib/**/*.js'
+			],
+			options: { jshintrc: '.jshintrc', force: true }
 		},
 
 		
 		// Clean up old cruft
 		clean: {
 			tmp: [ 'tmp' ],
-			build: [ 'build' ],
+			build: [ 'build/' + ( isProd ? 'prod' : 'dev' ) ],
 			generated: [ 'generated' ]
 		},
 
 
 		// Compile .scss files
 		sass: {
-			dev: {
-				files: {
-					'generated/v/x/styles/min.css': 'src/v/x/styles/**/*.scss'
-				},
-				options: { debugInfo: true }
-			},
-			build: {
-				files: {
-					'build/v/x/styles/min.css': 'src/v/x/styles/**/*.scss'
-				},
-				options: { style: 'compressed' }
+			main: {
+				files: [{
+					src: 'src/versioned/styles/main.scss',
+					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/styles/min.css'
+				}],
+				options: {
+					debugInfo: !isProd,
+					style: ( isProd ? 'compressed' : 'expanded' )
+				}
 			}
 		},
 		
@@ -120,120 +122,87 @@ module.exports = function(grunt) {
 		requirejs: {
 			compile: {
 				options: {
-					baseUrl: 'build/v/x/js/',
-					out: 'build/v/x/js/main.js',
-					name: 'almond',
-					include: 'main',
-					mainConfigFile: 'build/v/x/js/main.js',
-					wrap: true,
-					optimize: 'uglify2',
-					uglify2: {
-						compress: {
-							dead_code: true,
-							conditionals: true // e.g. rewrite `if ( <%= production %> ) { doX(); } else { doY() }` as `doX()`
-						}
-					}
+					baseUrl: 'build/tmp/v/x/js/',
+					out: 'build/prod/v/x/js/app.js',
+					name: 'app',
+					insertRequire: [ 'app' ],
+					optimize: 'none'
 				}
 			}
 		},
 
 		// Copy files
 		copy: {
-			files: {
+			versioned: {
 				files: [{
 					expand: true,
-					cwd: 'src/v/x/files',
-					src: ['**'],
-					dest: 'build/v/x/files/'
+					cwd: 'src/versioned',
+					src: [ '**', '!js/**/*' ],
+					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/'
 				}]
 			},
-			root: {
+			nonVersioned: {
 				files: [{
 					expand: true,
 					cwd: 'src/',
-					src: ['*.*'],
-					dest: 'build/'
+					src: [ '**', '!versioned', '!versioned/**/*' ],
+					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/'
 				}],
 				options: {
-					processContent: buildTagReplacer
+					processContent: tagReplacer
 				}
 			},
 			js: {
 				files: [{
 					expand: true,
-					cwd: 'src/v/x/js',
-					src: ['**'],
-					dest: 'build/v/x/js'
+					cwd: 'src/versioned/js',
+					src: [ '**' ],
+					dest: 'build/' + ( isProd ? 'tmp' : 'dev' ) + '/v/x/js' // tmp, as it needs to be optimised
 				}],
 				options: {
-					processContent: buildTagReplacer
+					processContent: tagReplacer
 				}
-			},
-			filesdev: {
-				files: [{
-					expand: true,
-					cwd: 'src/v/x/files',
-					src: ['**'],
-					dest: 'generated/v/x/files/'
-				}]
-			},
-			rootdev: {
-				files: [{
-					expand: true,
-					cwd: 'src/',
-					src: ['*.*'],
-					dest: 'generated/'
-				}],
-				options: {
-					processContent: devTagReplacer
-				}
-			},
-			jsdev: {
-				files: [{
-					expand: true,
-					cwd: 'src/v/x/js',
-					src: ['**'],
-					dest: 'generated/v/x/js'
-				}],
-				options: {
-					processContent: devTagReplacer
-				}
-			},
+			}
 		},
 
-		// Compress any CSS in the root folder
+		// Compress all CSS
 		cssmin: {
 			build: {
 				files: [{
 					expand: true,
-					cwd: 'tmp/build/',
-					src: '*.css',
-					dest: 'build/'
+					cwd: 'build/prod/',
+					src: '**/*.css',
+					dest: 'build/prod/'
 				}]
 			}
 		},
 
-		// Minify any JS in the root folder
+		// Minify all JS
 		uglify: {
+			options: {
+				compress: {
+					dead_code: true,
+					conditionals: true // e.g. rewrite `if ( <%= production %> ) { doX(); } else { doY() }` as `doX()`
+				}
+			},
 			build: {
 				files: [{
-				expand: true,
-				cwd: 'build/',
-				src: '*.js',
-				dest: 'build/'}]
+					expand: true,
+					cwd: 'build/prod/',
+					src: '**/*.js',
+					dest: 'build/prod/'
+				}]
 			}
 		},
 		
-		// Combine contents of `src/v/x/data` into a single `data.json` file
+		// Combine contents of `src/versioned/data` into a single `data.json` file
 		dir2json: {
-			dev: {
-				root: 'src/v/x/data/',
-				dest: 'generated/v/x/data/data.json',
-				options: { space: '\t' }
-			},
-			build: {
-				root: 'src/v/x/data/',
-				dest: 'build/v/x/data/data.json'
+			data: {
+				root: 'src/versioned/data/',
+				dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/data/data.json',
+				options: {
+					space: isProd ? '\t' : ''
+				}
 			}
 		},
 
@@ -283,11 +252,11 @@ module.exports = function(grunt) {
 			version: {
 				files: [{
 					expand: true,
-					cwd: 'build/v/x/',
+					cwd: 'build/prod/v/',
 					src: [ '**/*' ]
 				}],
 				options: {
-					pathPrefix: '<%= versionPath %>',
+					pathPrefix: '<%= projectPath %><%= versionDir %>',
 					params: {
 						CacheControl: 'max-age=31536000'
 					}
@@ -337,48 +306,31 @@ module.exports = function(grunt) {
 
 	
 
-	
-	// generate a runnable build for developing
-	grunt.registerTask( 'generate', [
-		'copy:rootdev',
-		'copy:jsdev',
-		'copy:filesdev',
-		'sass:dev',
-		'dir2json:dev'
-	]);
-
-	// default task - generate dev build and watch for changes
-	grunt.registerTask( 'default', [
-		'generate',
-		'watch'
-	]);
-
-	// build task - link, compile, flatten, optimise, copy
-	grunt.registerTask( 'build', [
-		// clear out previous build
+	var buildSequence = [
 		'clean:build',
 		'clean:tmp',
 
-		//Lint js files!
 		'jshint',
-
-		// copy files from project/files to build/v/x/files and from project root to build root
-		'copy:root',
+		'copy:nonVersioned',
 		'copy:js',
-		'copy:files',
+		'copy:versioned',
+		'sass',
+		'dir2json'
+	];
 
-		// build our min.css, without debugging info
-		'sass:build',
-		'dir2json:build',
+	if ( isProd ) {
+		buildSequence.push( 'requirejs', 'cssmin', 'uglify' );
+	}
 
-		// optimise JS
-		'requirejs',
+	grunt.registerTask( 'build', buildSequence );
 
-		// optimise JS and CSS from the root folder
-		'cssmin:build',
-		'uglify:build',
-
+	// default task - generate dev build and watch for changes
+	grunt.registerTask( 'default', [
+		'build',
+		'watch'
 	]);
+
+	
 
 	// launch sequence
 	grunt.registerTask( 'deploy', [

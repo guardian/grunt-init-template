@@ -1,14 +1,14 @@
 /*global define, window */
 
 define(
-[],
-function () {
+[ 'someDependency' ],
+function ( someDep ) {
 
 	'use strict';
 
 	var app = {
-		launch: function ( el, guiEl, window, config, mediator ) {
-			console.log( 'launching app' );
+		launch: function ( el, guiEl, context, config, mediator ) {
+			guiEl.innerHTML = someDep;
 		}
 	};
 

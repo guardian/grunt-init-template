@@ -1,13 +1,18 @@
 /*global define */
 
 define(
-[ '<%= versionDir %>js/app' ],
-function ( app ) {
+function () {
 
 	'use strict';
 
+	// If you alter this config, you will also need to alter the
+	// requirejs task config in the Gruntfile
+	var amdConfig = {
+		baseUrl: '<%= versionDir %>js'
+	};
+
 	return {
-		boot: function ( el, window, config, mediator ) {
+		boot: function ( el, context, config, mediator ) {
 
 			var guiEl, supported, link, head;
 
@@ -33,7 +38,9 @@ function ( app ) {
 
 
 			// launch app
-			app.launch( el, guiEl, window, config, mediator );
+			require( amdConfig, [ 'app' ]).then( function ( app ) {
+				app.launch( el, guiEl, context, config, mediator );
+			});
 		}
 	};
 

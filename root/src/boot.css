@@ -48,11 +48,11 @@
 }
 
 
-.GuiLoading_Circles_Left {
+div.GuiLoading_Circles_Left {
 	left: 0;
 }
 
-.GuiLoading_Circles_Middle {
+div.GuiLoading_Circles_Middle {
 	left: 1.3em;
 
 	-webkit-animation-delay: 0.2s;
@@ -62,7 +62,7 @@
 	        animation-delay: 0.2s;
 }
 
-.GuiLoading_Circles_Right {
+div.GuiLoading_Circles_Right {
 	left: 2.6em;
 
 	-webkit-animation-delay: 0.4s;

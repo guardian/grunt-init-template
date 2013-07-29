@@ -8,6 +8,5 @@
   "sub": true,
   "undef": true,
   "boss": true,
-  "eqnull": true,
-  "es5": true
+  "eqnull": true
 }

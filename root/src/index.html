@@ -12,13 +12,16 @@
 
 	<%= codeobject %>
 
-	<script src='require.min.js'></script>
+	<script>
+		var curl = { apiName: 'require' };
+	</script>
+	<script src='curl.js'></script>
 
 	<script>
-		require([ 'boot' ], function ( boot ) {
+		require([ 'boot' ], function ( interactive ) {
 			var init = function () {
 				var el = document.getElementsByTagName( 'figure' )[0];
-				boot.boot( el, window );
+				interactive.boot( el, window );
 			};
 
 			if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
@@ -28,5 +31,8 @@
 			}
 		});
 	</script>
+
+	<!-- TODO only include this during dev -->
+	<script src='http://localhost:35729/livereload.js'></script>
 </body>
 </html>
