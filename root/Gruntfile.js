@@ -54,7 +54,7 @@ module.exports = function(grunt) {
 		// the relevant tasks will execute
 		watch: {
 			sass: {
-				files: 'src/versioned/styles/**/*.scss',
+				files: 'src/**/*.scss',
 				tasks: 'sass',
 				interrupt: true,
 				options: {
@@ -66,14 +66,14 @@ module.exports = function(grunt) {
 				tasks: 'dir2json',
 				interrupt: true
 			},
-			files: {
-				files: 'src/versioned/files/**/*',
-				tasks: 'copy:files',
+			versioned: {
+				files: [ 'src/versioned/**/*', '!src/versioned/js/**/*' ],
+				tasks: 'copy:versioned',
 				interrupt: true
 			},
-			root: {
-				files: 'src/*.*',
-				tasks: 'copy:root',
+			nonVersioned: {
+				files: [ 'src/**/*', '!src/versioned/**/*' ],
+				tasks: 'copy:nonVersioned',
 				interrupt: true
 			},
 			js: {
@@ -203,6 +203,14 @@ module.exports = function(grunt) {
 				options: {
 					space: isProd ? '\t' : ''
 				}
+
+				// or if the data is small enough to inline:
+
+				/*dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/js/data.js',
+				options: {
+					space: isProd ? '\t' : '',
+					amd: true
+				}*/
 			}
 		},
 
