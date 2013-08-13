@@ -8,13 +8,14 @@ function () {
 	// If you alter this config, you will also need to alter the
 	// requirejs task config in the Gruntfile
 	var amdConfig = {
+		context: '{%= name %}', // don't remove this!
 		baseUrl: '<%= versionDir %>js'
 	};
 
 	return {
 		boot: function ( el, context, config, mediator ) {
 
-			var guiEl, supported, link, head;
+			var guiEl, supported, link, head, localRequire;
 
 			guiEl = document.getElementById( 'gui-{%= name %}' );
 
@@ -37,11 +38,29 @@ function () {
 			head.appendChild( link );
 
 
-			// launch app
-			require( amdConfig, [ 'app' ]).then( function ( app ) {
-				app.launch( el, guiEl, context, config, mediator );
-			});
+			// determine whether we're using requirejs (i.e. we're on R2) or curl
+			// (i.e. we're on next-gen), so that we can apply config appropriately
+			if ( typeof require() === 'function' ) {
+				
+				// requirejs, i.e. R2
+				localRequire = require.config( amdConfig );
+				
+				localRequire([ 'app' ], function ( app ) {
+					app.launch( el, guiEl, context, config, mediator );
+				});
+			}
+
+			else {
+
+				// curl, i.e. next-gen
+				require( amdConfig, [ 'app' ]).then( function ( app ) {
+					app.launch( el, guiEl, context, config, mediator );
+				});
+			}
 		}
 	};
 
 });
+
+
+
