@@ -3,8 +3,6 @@ module.exports = function(grunt) {
 
 	'use strict';
 
-	var isProd = grunt.option( 'prod' );
-
 	//Create some functions for replacing tags in documents
 	var makeTagReplacer = function( tags ) {
 		
@@ -25,9 +23,9 @@ module.exports = function(grunt) {
 	};
 
 	var tagReplacer = makeTagReplacer({
-		projectUrl: isProd ? '<%= projectUrl %>' : './',
-		versionDir: isProd ? '<%= versionDir %>' : 'v/x/',
-		production: isProd,
+		projectUrl: '<%= prod ? projectUrl : "./" %>',
+		versionDir: '<%= versionDir %>',
+		production: '<%= prod %>',
 		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
 	});
 
@@ -35,6 +33,11 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		
+		prod: grunt.option( 'prod' ),
+		min: grunt.option( 'min' ) || grunt.option( 'prod' ),
+		target: '<%= min ? "min" : "dev" %>',
+		tmpTarget: '<%= min ? "tmp" : "dev" %>',
+
 		// Deployment-related stuff
 		guid: '{%= guid %}',
 
@@ -99,7 +102,7 @@ module.exports = function(grunt) {
 		// Clean up old cruft
 		clean: {
 			tmp: [ 'tmp' ],
-			build: [ 'build/' + ( isProd ? 'prod' : 'dev' ) ],
+			build: [ 'build/<%= target %>' ],
 			generated: [ 'generated' ]
 		},
 
@@ -109,11 +112,11 @@ module.exports = function(grunt) {
 			main: {
 				files: [{
 					src: 'src/versioned/styles/main.scss',
-					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/styles/min.css'
+					dest: 'build/<%= target %>/v/x/styles/min.css'
 				}],
 				options: {
-					debugInfo: !isProd,
-					style: ( isProd ? 'compressed' : 'expanded' )
+					debugInfo: !grunt.option( 'prod' ),
+					style: ( '<%= min ? "compressed" : "expanded" %>' )
 				}
 			}
 		},
@@ -123,7 +126,7 @@ module.exports = function(grunt) {
 			compile: {
 				options: {
 					baseUrl: 'build/tmp/v/x/js/',
-					out: 'build/prod/v/x/js/app.js',
+					out: 'build/min/v/x/js/app.js',
 					name: 'app',
 					insertRequire: [ 'app' ],
 					optimize: 'none'
@@ -136,17 +139,17 @@ module.exports = function(grunt) {
 			versioned: {
 				files: [{
 					expand: true,
-					cwd: 'src/versioned',
+					cwd: 'src/versioned/files',
 					src: [ '**', '!js/**/*' ],
-					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/'
+					dest: 'build/<%= target %>/v/x/files/'
 				}]
 			},
 			nonVersioned: {
 				files: [{
 					expand: true,
 					cwd: 'src/',
-					src: [ '**', '!versioned', '!versioned/**/*' ],
-					dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/'
+					src: [ '**', '!versioned', '!versioned/**/*', '<%= prod ? "!" : "" %>preview.html' ],
+					dest: 'build/<%= target %>/'
 				}],
 				options: {
 					processContent: tagReplacer
@@ -157,7 +160,7 @@ module.exports = function(grunt) {
 					expand: true,
 					cwd: 'src/versioned/js',
 					src: [ '**' ],
-					dest: 'build/' + ( isProd ? 'tmp' : 'dev' ) + '/v/x/js' // tmp, as it needs to be optimised
+					dest: 'build/<%= tmpTarget %>/v/x/js' // tmp, as it needs to be optimised
 				}],
 				options: {
 					processContent: tagReplacer
@@ -170,9 +173,9 @@ module.exports = function(grunt) {
 			build: {
 				files: [{
 					expand: true,
-					cwd: 'build/prod/',
+					cwd: 'build/min/',
 					src: '**/*.css',
-					dest: 'build/prod/'
+					dest: 'build/min/'
 				}]
 			}
 		},
@@ -188,9 +191,9 @@ module.exports = function(grunt) {
 			build: {
 				files: [{
 					expand: true,
-					cwd: 'build/prod/',
+					cwd: 'build/min/',
 					src: '**/*.js',
-					dest: 'build/prod/'
+					dest: 'build/min/'
 				}]
 			}
 		},
@@ -199,16 +202,16 @@ module.exports = function(grunt) {
 		dir2json: {
 			data: {
 				root: 'src/versioned/data/',
-				dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/data/data.json',
+				dest: 'build/<%= target %>/v/x/data/data.json',
 				options: {
-					space: isProd ? '\t' : ''
+					space: '<%= min ? "" : "\t" %>'
 				}
 
 				// or if the data is small enough to inline:
 
-				/*dest: 'build/' + ( isProd ? 'prod' : 'dev' ) + '/v/x/js/data.js',
+				/*dest: 'build/<%= target %>/v/x/js/data.js',
 				options: {
-					space: isProd ? '\t' : '',
+					space: '<%= min ? "" : "\t" %>',
 					amd: true
 				}*/
 			}
@@ -221,7 +224,7 @@ module.exports = function(grunt) {
 			},
 			manifest: {
 				options: {
-					key: '<%= projectPath %>/manifest.json',
+					key: '<%= projectPath %>manifest.json',
 					dest: 'tmp/manifest.json'
 				}
 			}
@@ -249,7 +252,7 @@ module.exports = function(grunt) {
 			},
 			manifest: {
 				options: {
-					key: '<%= projectPath %>/manifest.json',
+					key: '<%= projectPath %>manifest.json',
 					data: '{"guid":"<%= guid %>","version":<%= version %>}',
 					params: {
 						CacheControl: 'no-cache',
@@ -260,7 +263,7 @@ module.exports = function(grunt) {
 			version: {
 				files: [{
 					expand: true,
-					cwd: 'build/prod/v/',
+					cwd: 'build/min/v/x/',
 					src: [ '**/*' ]
 				}],
 				options: {
@@ -273,7 +276,7 @@ module.exports = function(grunt) {
 			root: {
 				files: [{
 					expand: true,
-					cwd: 'build/',
+					cwd: 'build/min',
 					src: [ '*.*' ]
 				}],
 				options: {
@@ -312,7 +315,16 @@ module.exports = function(grunt) {
 	// Guardian Interactive tasks
 	grunt.loadNpmTasks('grunt-gui');
 
-	
+
+
+	grunt.registerTask( 'setProdFlag', function () {
+		grunt.config( 'prod', true );
+		grunt.config( 'min', true );
+	});
+
+	grunt.registerTask( 'setMinFlag', function () {
+		grunt.config( 'min', true );
+	});
 
 	var buildSequence = [
 		'clean:build',
@@ -326,11 +338,8 @@ module.exports = function(grunt) {
 		'dir2json'
 	];
 
-	if ( isProd ) {
-		buildSequence.push( 'requirejs', 'cssmin', 'uglify' );
-	}
-
 	grunt.registerTask( 'build', buildSequence );
+	grunt.registerTask( 'min', [ 'setMinFlag' ].concat( buildSequence ).concat([ 'requirejs', 'cssmin', 'uglify' ]) );
 
 	// default task - generate dev build and watch for changes
 	grunt.registerTask( 'default', [
@@ -338,20 +347,18 @@ module.exports = function(grunt) {
 		'watch'
 	]);
 
-	
-
 	// launch sequence
 	grunt.registerTask( 'deploy', [
-		// clear the tmp folder
-		'clean:tmp',
-
 		// connect to S3, establish version number
 		'createS3Instance',
 		'downloadFromS3:manifest',
 		'verifyManifest',
 
+		// set production flag
+		'setProdFlag',
+
 		// build project
-		'build',
+		'min',
 
 		// upload files
 		'lockProject',
@@ -362,19 +369,6 @@ module.exports = function(grunt) {
 
 		// point browser at newly deployed project
 		'shell:open'
-	]);
-
-	grunt.registerTask( 'deploy:simulate', [
-		// clear the tmp folder
-		'clean:tmp',
-
-		// connect to S3, establish version number
-		'createS3Instance',
-		'downloadFromS3:manifest',
-		'verifyManifest',
-
-		// build project
-		'build'
 	]);
 
 };
