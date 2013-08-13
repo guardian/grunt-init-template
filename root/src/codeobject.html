@@ -6,18 +6,18 @@
 
 	<!-- Accessible description of the interactive goes here -->
 	<noscript>
-		<span class='GuiNoScript'>Please <a href='http://enable-javascript.com/'>enable JavaScript</a> to view this interactive feature</span>
-		<style type='text/css'>#Gui{%= Name %} { display: none; }</style>
+		<span class='gui-browser-warning'>Please <a href='http://enable-javascript.com/'>enable JavaScript</a> to view this interactive feature</span>
+		<style type='text/css'>#gui-{%= name %} { display: none; }</style>
 	</noscript>
 
-	<div id='Gui{%= Name %}' class='Gui'>
-		<div class='GuiLoading'>
-			<h2 class='GuiLoading_Text'>loading</h2>
+	<div id='gui-{%= name %}' class='gui'>
+		<div class='gui-loading'>
+			<h2 class='gui-loading-text'>loading</h2>
 
-			<div class='GuiLoading_Circles'>
-				<div class='GuiLoading_Circles_Left'></div>
-				<div class='GuiLoading_Circles_Middle'></div>
-				<div class='GuiLoading_Circles_Right'></div>
+			<div class='gui-loading-circles'>
+				<div class='gui-loading-circles-left'></div>
+				<div class='gui-loading-circles-middle'></div>
+				<div class='gui-loading-circles-right'></div>
 			</div>
 		</div>
 	</div>

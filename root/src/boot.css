@@ -1,36 +1,36 @@
 @font-face {
-    font-family: 'Guardian-Text-Egyp-Web-Med-Latin';
-    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Med.eot');
-    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Med.eot?#iefix') format('embedded-opentype'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Med.woff') format('woff'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Med.ttf') format('truetype'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Med.svg#Guardian-Text-Egyp-Web-Medium') format('svg');
+    font-family: 'Guardian Egyptian Text';
+    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.eot');
+    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.eot?#iefix') format('embedded-opentype'),
+         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.woff') format('woff'),
+         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.ttf') format('truetype'),
+         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.svg#Guardian-Text-Egyp-Web-Medium') format('svg');
     font-weight: 500;
     font-style: normal;
     font-stretch: normal;
 }
 
-.GuiLoading {
+.gui-loading {
 	margin: 6em auto;
 	text-align: center;
 }
 
-.GuiLoading_Text {
-	font-family: 'Guardian-Text-Egyp-Web-Med-Latin', 'Georgia';
-	font-weight: normal;
+.gui-loading-text {
+	font-family: 'Guardian Egyptian Text', 'Georgia';
+	font-weight: 400;
 	font-size: 2em;
 	color: #333;
 	margin: 0 0 0.5em 0;
 }
 
-.GuiLoading_Circles {
+.gui-loading-circles {
 	position: relative;
 	width: 3.6em;
 	height: 1em;
 	margin: 0 auto;
 }
 
-.GuiLoading_Circles div {
+.gui-loading-circles div {
 	position: absolute;
 	width: 1em;
 	height: 1em;
@@ -48,11 +48,11 @@
 }
 
 
-div.GuiLoading_Circles_Left {
+div.gui-loading-circles-left {
 	left: 0;
 }
 
-div.GuiLoading_Circles_Middle {
+div.gui-loading-circles-middle {
 	left: 1.3em;
 
 	-webkit-animation-delay: 0.2s;
@@ -62,7 +62,7 @@ div.GuiLoading_Circles_Middle {
 	        animation-delay: 0.2s;
 }
 
-div.GuiLoading_Circles_Right {
+div.gui-loading-circles-right {
 	left: 2.6em;
 
 	-webkit-animation-delay: 0.4s;
@@ -99,7 +99,7 @@ div.GuiLoading_Circles_Right {
 	to { opacity: 1; }
 }
 
-.GuiBrowserWarning {
+.gui-browser-warning {
 	background-color: rgb(255,240,240);
 	font-size: 16px;
 	padding: 1em;
@@ -107,8 +107,8 @@ div.GuiLoading_Circles_Right {
 	display: block;
 }
 
-.GuiBrowserWarning h2 {
-	font-family: 'Guardian-Text-Egyp-Web-Reg-Latin', 'Georgia';
+.gui-browser-warning h2 {
+	font-family: 'Guardian Egyptian Text', 'Georgia';
 	border-top: none !important;
 	font-weight: normal;
 	font-size: 20px;
@@ -121,4 +121,13 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+body {
+	margin: 0;
+}
+
+figure.interactive {
+	margin: 0;
+	padding: 0;
 }

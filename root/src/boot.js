@@ -16,13 +16,13 @@ function () {
 
 			var guiEl, supported, link, head;
 
-			guiEl = el.getElementsByTagName( 'div' )[0];
+			guiEl = document.getElementById( 'gui-{%= name %}' );
 
 			// do feature detection etc
 			supported = true;
 
 			if ( !supported ) {
-				message = '<div class="GuiBrowserWarning"><h2>Time to upgrade your browser!</h2><p>Your browser lacks features necessary to view this interactive. We strongly recommend upgrading to a modern browser such as <a href="http://google.com/chrome">Google Chrome</a> or <a href="http://getfirefox.com">Mozilla Firefox</a>.</p></div>';
+				message = '<div class="gui-browser-warning"><h2>Time to upgrade your browser!</h2><p>Your browser lacks features necessary to view this interactive. We strongly recommend upgrading to a modern browser such as <a href="http://google.com/chrome">Google Chrome</a> or <a href="http://getfirefox.com">Mozilla Firefox</a>.</p></div>';
 				guiEl.innerHTML = message;
 
 				return;
