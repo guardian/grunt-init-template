@@ -12,7 +12,7 @@
 	exports.description = 'Create a new Guardian Interactive project.';
 
 	// Template-specific notes to be displayed before question prompts.
-	exports.after = 'Now, install project dependencies with _npm install_. This will download grunt and the plugins this project uses. For further instructions do _cat README.md_';
+	exports.after = 'Now, install project dependencies with _npm install_ (or _npm install --no-registry_ to install modules from cache, which may be much faster). This will download grunt and the plugins this project uses. For further instructions do _cat README.md_';
 
 	// Any existing file or directory matching this wildcard will cause a warning.
 	exports.warnOn = '*';
