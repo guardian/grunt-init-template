@@ -198,16 +198,18 @@ module.exports = function(grunt) {
 				root: 'src/versioned/data/',
 				dest: 'build/<%= target %>/v/x/data/data.json',
 				options: {
+					exclude: [ '**/README.md' ],
 					space: '<%= min ? "" : "\t" %>'
 				}
 
 				// or if the data is small enough to inline:
 
-				/*dest: 'build/<%= target %>/v/x/js/data.js',
-				options: {
-					space: '<%= min ? "" : "\t" %>',
-					amd: true
-				}*/
+				// dest: 'build/<%= target %>/v/x/js/data.js',
+				// options: {
+				// 	exclude: [ '**/README.md' ],
+				// 	space: '<%= min ? "" : "\t" %>',
+				// 	amd: true
+				// }
 			}
 		},
 

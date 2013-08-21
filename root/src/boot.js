@@ -9,7 +9,7 @@ function () {
 	// requirejs task config in the Gruntfile
 	var amdConfig = {
 		context: '{%= name %}', // don't remove this!
-		baseUrl: '<%= versionDir %>js'
+		baseUrl: '<%= projectUrl %><%= versionDir %>js'
 	};
 
 	return {
@@ -32,7 +32,7 @@ function () {
 			// load CSS
 			link = document.createElement( 'link' );
 			link.setAttribute( 'rel', 'stylesheet' );
-			link.setAttribute( 'href', '<%= versionDir %>styles/min.css' );
+			link.setAttribute( 'href', '<%= projectUrl %><%= versionDir %>styles/min.css' );
 
 			head = document.getElementsByTagName( 'head' )[0];
 			head.appendChild( link );

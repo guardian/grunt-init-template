@@ -13,7 +13,7 @@ But you don't need to know any of that if you don't want, because Sass is also a
 How do these styles get into my project?
 ----------------------------------------
 
-The `grunt sass` task is configured to compile the contents of this folder to `generated/v/x/min.css` during development, and `build/version/min.css` in the pre-deployment build step. (The `boot.js` file refers to it as `<%= projectUrl %>/<%= versionDir %>/min.css`).
+The `grunt sass` task is configured to compile the `main.scss` file to `min.css` in the versioned folder of the built project. (The `boot.js` file refers to it as `<%= projectUrl %><%= versionDir %>styles/min.css`).
 
 If you run `grunt watch` this process will happen automatically every time you modify one of your .scss files or add a new one. You don't need to include a <link> tag for each one or anything like that - it will just get included.
 
