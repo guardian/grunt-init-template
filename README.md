@@ -2,9 +2,14 @@
 
 Template for Guardian Interactive projects, using Grunt 0.4
 
-##Installation
+## Assumptions
 
-###1. Install grunt-init
+* You have [node](http://nodejs.org) installed
+* You have [grunt-cli](http://gruntjs.com/getting-started) installed
+
+## Installation
+
+### 1. Install grunt-init
 
 `npm install -g grunt-init`
 
@@ -15,11 +20,11 @@ alias bloody=sudo
 bloody npm install -g grunt-init
 ```
 
-###2. Install the template
+### 2. Install the template
 `git clone git@github.com:GuardianInteractive/grunt-init-template.git ~/.grunt-init/gui`
 
 
-##Usage
+## Usage
 Create a project folder, then initialise the project from the `gui` template:
 
 ```shell
