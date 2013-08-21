@@ -56,33 +56,28 @@ module.exports = function(grunt) {
 		// Main watch task. Kick this off by entering `grunt watch`. Now, any time you change the files below,
 		// the relevant tasks will execute
 		watch: {
+			options: {
+				interrupt: true
+			},
 			sass: {
 				files: 'src/**/*.scss',
-				tasks: 'sass',
-				interrupt: true,
-				options: {
-					livereload: true
-				}
+				tasks: 'sass'
 			},
 			data: {
 				files: 'src/versioned/data/**/*',
-				tasks: 'dir2json',
-				interrupt: true
+				tasks: 'dir2json'
 			},
 			versioned: {
 				files: [ 'src/versioned/**/*', '!src/versioned/js/**/*' ],
-				tasks: 'copy:versioned',
-				interrupt: true
+				tasks: 'copy:versioned'
 			},
 			nonVersioned: {
 				files: [ 'src/**/*', '!src/versioned/**/*' ],
-				tasks: 'copy:nonVersioned',
-				interrupt: true
+				tasks: 'copy:nonVersioned'
 			},
 			js: {
 				files: 'src/versioned/js/**',
-				tasks: 'copy:js',
-				interrupt: true
+				tasks: 'copy:js'
 			}
 		},
 
@@ -102,8 +97,7 @@ module.exports = function(grunt) {
 		// Clean up old cruft
 		clean: {
 			tmp: [ 'tmp' ],
-			build: [ 'build/<%= target %>' ],
-			generated: [ 'generated' ]
+			build: [ 'build/tmp', 'build/<%= target %>' ]
 		},
 
 
@@ -115,7 +109,7 @@ module.exports = function(grunt) {
 					dest: 'build/<%= target %>/v/x/styles/min.css'
 				}],
 				options: {
-					debugInfo: !grunt.option( 'prod' ),
+					debugInfo: '<%= prod ? false : true %>',
 					style: ( '<%= min ? "compressed" : "expanded" %>' )
 				}
 			}

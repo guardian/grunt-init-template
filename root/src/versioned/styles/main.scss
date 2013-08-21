@@ -2,8 +2,9 @@
 // import all your subsidiary stylesheets here
 
 // default imports
-@import "guardian/fonts";
+@import "guardian/base";
 
 
-// project-specific styles
+// project-specific styles. It's recommended to split these styles up into different files
+// rather than shoving them all in 'base.scss' - just remember to import them
 @import "base";

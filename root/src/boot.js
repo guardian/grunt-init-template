@@ -15,7 +15,7 @@ function () {
 	return {
 		boot: function ( el, context, config, mediator ) {
 
-			var guiEl, supported, link, head, localRequire;
+			var guiEl, supported, link, head, localRequire, launch;
 
 			guiEl = document.getElementById( 'gui-{%= name %}' );
 
@@ -40,22 +40,19 @@ function () {
 
 			// determine whether we're using requirejs (i.e. we're on R2) or curl
 			// (i.e. we're on next-gen), so that we can apply config appropriately
+			launch = function ( app ) {
+				app.launch( el, guiEl, context, config, mediator );
+			};
+
 			if ( typeof require() === 'function' ) {
-				
 				// requirejs, i.e. R2
 				localRequire = require.config( amdConfig );
-				
-				localRequire([ 'app' ], function ( app ) {
-					app.launch( el, guiEl, context, config, mediator );
-				});
+				localRequire([ 'app' ], launch );
 			}
 
 			else {
-
 				// curl, i.e. next-gen
-				require( amdConfig, [ 'app' ]).then( function ( app ) {
-					app.launch( el, guiEl, context, config, mediator );
-				});
+				require( amdConfig, [ 'app' ]).then( launch );
 			}
 		}
 	};

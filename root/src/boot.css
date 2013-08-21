@@ -1,18 +1,7 @@
-@font-face {
-    font-family: 'Guardian Egyptian Text';
-    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.eot');
-    src: url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.eot?#iefix') format('embedded-opentype'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.woff') format('woff'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.ttf') format('truetype'),
-         url('http://pasteup.guim.co.uk/fonts/latin1/Guardian-Text-Egyp-Web-Reg.svg#Guardian-Text-Egyp-Web-Medium') format('svg');
-    font-weight: 500;
-    font-style: normal;
-    font-stretch: normal;
-}
-
 .gui-loading {
 	margin: 6em auto;
 	text-align: center;
+	display: block !important;
 }
 
 .gui-loading-text {

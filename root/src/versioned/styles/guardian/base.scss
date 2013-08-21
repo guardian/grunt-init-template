@@ -1,0 +1,17 @@
+// TODO add other default styles
+
+.interactive {
+    color: #333;
+    font-size: 16px;
+    line-height: 1.4;
+    font-family: 'Guardian Egyptian Text';
+
+    a, a:link, a:visited {
+        color: #005689;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}
