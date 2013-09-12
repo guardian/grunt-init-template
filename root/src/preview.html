@@ -105,9 +105,9 @@
 	<script id='main' type='text/ractive'>
 		<div class='left'>
 			<div class='custom-dimensions'>
-				<input class='width' value='{{previewWidth}}' proxy-input='redraw'>
+				<input type='number' class='width' value='{{previewWidth}}' proxy-input='redraw'>
 				x
-				<input class='height' value='{{previewHeight}}' proxy-input='redraw'>
+				<input type='number' class='height' value='{{previewHeight}}' proxy-input='redraw'>
 			</div>
 
 			<ul>
@@ -133,14 +133,12 @@
 	<script>
 		window.onload = function () {
 
-			var ractive, redraw;
+			var ractive, redraw, hashPattern;
 
 			ractive = new Ractive({
 				el: 'container',
 				template: '#main',
 				data: {
-					previewWidth: 940,
-					previewHeight: 600,
 					options: [
 						{ description: 'Guardian wide', width: 940, height: 600 },
 						{ description: 'Guardian', width: 760, height: 600 },
@@ -171,6 +169,43 @@
 					redraw();
 				},
 				redraw: redraw
+			});
+
+			// observe hash
+			hashPattern = /#([0-9]+),([0-9]+)/;
+			hashchangeHandler = function () {
+				var hash, width, height;
+
+				hash = window.location.hash;
+				match = hashPattern.exec( hash );
+
+				if ( match ) {
+					ractive.set({
+						previewWidth: +match[1],
+						previewHeight: +match[2]
+					});
+
+					redraw();
+				}
+			};
+
+			window.addEventListener( 'hashchange', hashchangeHandler );
+			hashchangeHandler();
+
+			if ( !ractive.get( 'previewWidth' ) ) {
+				ractive.set({
+					previewWidth: 960,
+					previewHeight: 600
+				});
+			}
+
+			ractive.observe({
+				previewWidth: function ( width ) {
+					window.location.hash = width + ',' + this.get( 'previewHeight' );
+				},
+				previewHeight: function ( height ) {
+					window.location.hash = this.get( 'previewWidth' ) + ',' + height;
+				}
 			});
 		}
 	</script>
