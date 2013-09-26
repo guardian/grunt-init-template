@@ -15,16 +15,14 @@ function () {
 	return {
 		boot: function ( el, context, config, mediator ) {
 
-			var guiEl, supported, link, head, localRequire, launch;
-
-			guiEl = document.getElementById( 'gui-{%= name %}' );
+			var supported, link, head, localRequire, launch;
 
 			// do feature detection etc
 			supported = true;
 
 			if ( !supported ) {
 				message = '<div class="gui-browser-warning"><h2>Time to upgrade your browser!</h2><p>Your browser lacks features necessary to view this interactive. We strongly recommend upgrading to a modern browser such as <a href="http://google.com/chrome">Google Chrome</a> or <a href="http://getfirefox.com">Mozilla Firefox</a>.</p></div>';
-				guiEl.innerHTML = message;
+				el.innerHTML = message;
 
 				return;
 			}
@@ -41,7 +39,7 @@ function () {
 			// determine whether we're using requirejs (i.e. we're on R2) or curl
 			// (i.e. we're on next-gen), so that we can apply config appropriately
 			launch = function ( app ) {
-				app.launch( el, guiEl, context, config, mediator );
+				app.launch( el, context, config, mediator );
 			};
 
 			if ( typeof require() === 'function' ) {

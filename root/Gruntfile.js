@@ -122,7 +122,6 @@ module.exports = function(grunt) {
 					baseUrl: 'build/tmp/v/x/js/',
 					out: 'build/min/v/x/js/app.js',
 					name: 'app',
-					insertRequire: [ 'app' ],
 					optimize: 'none'
 				}
 			}
@@ -196,7 +195,7 @@ module.exports = function(grunt) {
 		dir2json: {
 			data: {
 				root: 'src/versioned/data/',
-				dest: 'build/<%= target %>/v/x/data/data.json',
+				dest: 'build/<%= tmpTarget %>/v/x/data/data.json',
 				options: {
 					exclude: [ '**/README.md' ],
 					space: '<%= min ? "" : "\t" %>'

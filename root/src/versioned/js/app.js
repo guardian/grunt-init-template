@@ -7,8 +7,8 @@ function ( someDep ) {
 	'use strict';
 
 	var app = {
-		launch: function ( el, guiEl, context, config, mediator ) {
-			guiEl.innerHTML = someDep;
+		launch: function ( el, context, config, mediator ) {
+			el.innerHTML = someDep;
 		}
 	};
 
