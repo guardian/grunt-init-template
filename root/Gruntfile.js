@@ -26,7 +26,8 @@ module.exports = function(grunt) {
 		projectUrl: '<%= prod ? projectUrl : "./" %>',
 		versionDir: '<%= versionDir %>',
 		production: '<%= prod %>',
-		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' )
+		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' ),
+		fonts: '<%= fonts %>'
 	});
 
 
@@ -48,6 +49,8 @@ module.exports = function(grunt) {
 		versionDir: 'v/<%= version %>/',
 		
 		projectUrl: '<%= baseUrl %><%= projectPath %>',
+
+		fonts: '<%= prod ? "http://pasteup.guim.co.uk/0.0.5/css/fonts.pasteup.min.css" : "../../offline/fonts.css" %>',
 
 		s3: {
 			bucket: 'gdn-cdn'
@@ -83,14 +86,34 @@ module.exports = function(grunt) {
 
 
 		// Lint .js files in the src/js folder
+		// Lint .js files in the src/js folder
 		jshint: {
 			files: [
 				'src/versioned/js/**/*.js', 
 				
 				//exclude these files:
-				'!src/versioned/js/lib/**/*.js'
+				'!src/versioned/js/lib/**/*.js',
+				'!src/versioned/js/utils/**/*.js'
 			],
-			options: { jshintrc: '.jshintrc', force: true }
+			options: {
+				undef: true,
+				unused: true,
+				boss: true,
+				smarttabs: true,
+				globals: {
+					define: true,
+					window: true,
+					document: true,
+					navigator: true,
+					XMLHttpRequest: true,
+					setTimeout: true,
+					clearTimeout: true,
+					Image: true
+				},
+
+				// don't actually fail the build
+				force: true
+			}
 		},
 
 		
