@@ -15,7 +15,7 @@ function () {
 	return {
 		boot: function ( el, context, config, mediator ) {
 
-			var supported, link, head, localRequire, launch;
+			var supported, loadCSS, head, localRequire, launch;
 
 			// do feature detection etc
 			supported = true;
@@ -28,13 +28,19 @@ function () {
 			}
 
 			// load CSS
-			link = document.createElement( 'link' );
-			link.setAttribute( 'rel', 'stylesheet' );
-			link.setAttribute( 'href', '<%= projectUrl %><%= versionDir %>styles/min.css' );
-
 			head = document.getElementsByTagName( 'head' )[0];
-			head.appendChild( link );
 
+			loadCSS = function ( url ) {
+				var link = document.createElement( 'link' );
+				link.setAttribute( 'rel', 'stylesheet' );
+				link.setAttribute( 'href', url );
+
+				head.appendChild( link );
+			};
+
+			loadCSS( '<%= fonts %>' );
+			loadCSS( '<%= projectUrl %><%= versionDir %>styles/min.css' );
+			
 
 			// determine whether we're using requirejs (i.e. we're on R2) or curl
 			// (i.e. we're on next-gen), so that we can apply config appropriately
