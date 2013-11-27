@@ -1,26 +1,40 @@
 <!-- Start of '{%= name %}' interactive -->
-<figure class='interactive' data-interactive='<%= projectUrl %>'>
-	
-	<!-- Styles needed immediately -->
-	<link rel='stylesheet' href='http://pasteup.guim.co.uk/0.0.5/css/fonts.pasteup.min.css'>
-	<link rel='stylesheet' href='<%= projectUrl %>boot.css'>
+<style type='text/css'>
+	figure { display: block; }
+</style>
 
-	<!-- Accessible description of the interactive goes here -->
-	<noscript>
-		<span class='gui-browser-warning'>Please <a href='http://enable-javascript.com/'>enable JavaScript</a> to view this interactive feature</span>
-		<style type='text/css'>#gui-{%= name %} { display: none; }</style>
-	</noscript>
+<figure class='interactive' data-interactive='<%= projectUrl %>'></figure>
 
-	<div id='gui-{%= name %}' class='gui'>
-		<div class='gui-loading' style='display: none;'>
-			<h2 class='gui-loading-text'>loading</h2>
+<!-- This bit is required for interactives to work on R2 -->
+<script>
+	if ( !window.guiLoadInteractives ) {
+		window.guiLoadInteractives = function () {
+			var figures, figure, i, load;
 
-			<div class='gui-loading-circles'>
-				<div class='gui-loading-circles-left'></div>
-				<div class='gui-loading-circles-middle'></div>
-				<div class='gui-loading-circles-right'></div>
-			</div>
-		</div>
-	</div>
-</figure>
+			load = function ( figure ) {
+				var url;
+
+				if ( !figure.GUI_LOADED ) {
+					url = figure.getAttribute( 'data-interactive' );
+					
+					require([ url + 'boot' ], function ( interactive ) {
+						if ( !figure.GUI_LOADED ) {
+							interactive.boot( figure, null, null, null );
+							figure.GUI_LOADED = true;
+						}
+					});
+				}
+			};
+
+			figures = document.querySelectorAll( 'figure.interactive' );
+			
+			i = figures.length;
+			while ( i-- ) {
+				load( figures[i] );
+			}
+		};
+	}
+
+	window.guiLoadInteractives();
+</script>
 <!-- End of '{%= name %}' interactive -->

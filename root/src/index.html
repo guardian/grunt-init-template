@@ -10,26 +10,8 @@
 
 <body>
 
+	<script src='../../offline/require.js'></script>
 	<%= codeobject %>
 
-	<script>
-		var curl = { apiName: 'require' };
-	</script>
-	<script src='curl.js'></script>
-
-	<script>
-		require([ 'boot' ], function ( interactive ) {
-			var init = function () {
-				var el = document.getElementsByTagName( 'figure' )[0];
-				interactive.boot( el, window );
-			};
-
-			if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
-				init();
-			} else {
-				window.onload = init;
-			}
-		});
-	</script>
 </body>
 </html>
