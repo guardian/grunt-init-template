@@ -3,55 +3,26 @@ module.exports = function(grunt) {
 
 	'use strict';
 
-	//Create some functions for replacing tags in documents
-	var makeTagReplacer = function( tags ) {
-		
-		var replacer = function ( content, srcpath ) {
-			var tagName, tagValue, regex;
-
-			for ( tagName in tags ) {
-				tagValue = grunt.config.process( tags[ tagName ] );
-				regex = new RegExp( '<%=\\s*' + tagName + '\\s*%>', 'g' );
-				
-				content = content.replace(regex, tagValue);
-			}
-
-			return content;
-		};
-
-		return replacer;
-	};
-
-	var tagReplacer = makeTagReplacer({
-		projectUrl: '<%= prod ? projectUrl : "./" %>',
-		versionDir: '<%= versionDir %>',
-		production: '<%= prod %>',
-		codeobject: grunt.file.read( 'src/codeobject.html' ).replace( /<%=\s*projectUrl\s*%>/g, './' ),
-		fonts: '<%= fonts %>'
-	});
-
-
-
 	grunt.initConfig({
 		
+		// Config
 		prod: grunt.option( 'prod' ),
 		min: grunt.option( 'min' ) || grunt.option( 'prod' ),
 		target: '<%= min ? "min" : "dev" %>',
 		tmpTarget: '<%= min ? "tmp" : "dev" %>',
 
-		// Deployment-related stuff
-		guid: '{%= guid %}',
-
-		baseUrl: 'http://interactive.guim.co.uk/',
-
-		projectPath: '{%= path %}/',
-		version: 'x',
+		// Template tags
+		codeobject: grunt.file.read( 'src/codeobject.html' ),
+		projectUrl: '<%= prod ? baseUrl + projectPath : "./" %>',
 		versionDir: 'v/<%= version %>/',
-		
-		projectUrl: '<%= baseUrl %><%= projectPath %>',
-
 		fonts: '<%= prod ? "http://pasteup.guim.co.uk/0.0.5/css/fonts.pasteup.min.css" : "../../offline/fonts.css" %>',
 
+		// Deployment-related stuff
+		guid: '{%= guid %}',
+		baseUrl: 'http://interactive.guim.co.uk/',
+		projectPath: '{%= path %}/',
+		version: 'x', // will be overridden by deploy task
+		
 		s3: {
 			bucket: 'gdn-cdn'
 		},
@@ -145,7 +116,7 @@ module.exports = function(grunt) {
 					baseUrl: 'build/tmp/v/x/js/',
 					out: 'build/min/v/x/js/app.js',
 					name: 'app',
-					optimize: 'none'
+					optimize: 'none' // js gets uglified separately, no need to waste time here
 				}
 			}
 		},
@@ -166,10 +137,7 @@ module.exports = function(grunt) {
 					cwd: 'src/',
 					src: [ '**', '!versioned', '!versioned/**/*', '<%= prod ? "!" : "" %>preview.html' ],
 					dest: 'build/<%= target %>/'
-				}],
-				options: {
-					processContent: tagReplacer
-				}
+				}]
 			},
 			js: {
 				files: [{
@@ -177,10 +145,16 @@ module.exports = function(grunt) {
 					cwd: 'src/versioned/js',
 					src: [ '**' ],
 					dest: 'build/<%= tmpTarget %>/v/x/js' // tmp, as it needs to be optimised
-				}],
-				options: {
-					processContent: tagReplacer
-				}
+				}]
+			},
+			options: {
+				processContent: function ( content, srcpath ) {
+					return grunt.template.process( content );
+				},
+
+				// We manually specify which file extensions shouldn't be processed - basically
+				// any binary files such as images, audio, video etc
+				processContentExclude: '**/*.{jpg,png,gif,mp3,ogg,mp4}'
 			}
 		},
 
