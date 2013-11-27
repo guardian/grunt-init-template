@@ -4,7 +4,7 @@
 
 /*global exports */
 
-(function ( exports, child_process ) {
+(function ( exports, fs, path ) {
 
 	'use strict';
 
@@ -35,7 +35,7 @@
 
 
 		complete = function ( err, props ) {
-			var files;
+			var allFiles, fontFiles, otherFiles, src, dest;
 
 			// generate a GUID for this project. Thanks, http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 			props.guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -52,9 +52,51 @@
 			// capitalise name
 			props.Name = props.name.substr( 0, 1 ).toUpperCase() + props.name.substring( 1 );
 
-			files = init.filesToCopy( props );
+			allFiles = init.filesToCopy( props );
+			fontFiles = {};
+			otherFiles = {};
 
-			init.copyAndProcess( files, props );
+			// Copy all files *except* fonts
+			for ( dest in allFiles ) {
+				if ( /^offline\/fonts\//.test( dest ) ) {
+					fontFiles[ dest ] = allFiles[ dest ];
+				} else {
+					otherFiles[ dest ] = allFiles[ dest ];
+				}
+			}
+
+			init.copyAndProcess( otherFiles, props );
+
+			// Copy font files separately (because grunt borks up permissions)
+			grunt.log.write( 'Copying font files for offline preview' );
+
+			fs.mkdirSync( 'offline/fonts' );
+			
+			var copyFileSync = function(srcFile, destFile) {
+				var BUF_LENGTH, buff, bytesRead, fdr, fdw, pos;
+				BUF_LENGTH = 64 * 1024;
+				buff = new Buffer(BUF_LENGTH);
+				fdr = fs.openSync(srcFile, "r");
+				fdw = fs.openSync(destFile, "w");
+				bytesRead = 1;
+				pos = 0;
+				while (bytesRead > 0) {
+					bytesRead = fs.readSync(fdr, buff, 0, BUF_LENGTH, pos);
+					fs.writeSync(fdw, buff, 0, bytesRead);
+					pos += bytesRead;
+				}
+				fs.closeSync(fdr);
+				return fs.closeSync(fdw);
+			};
+
+			for ( dest in fontFiles ) {
+				src = fontFiles[ dest ];
+				copyFileSync( init.getFile( src ), init.destpath( dest ) );
+				grunt.log.write( '.' );
+			}
+
+			grunt.log.writeln( 'OK' );
+
 			done();
 		};
 
@@ -62,4 +104,4 @@
 
 	};
 
-}( exports, require( 'child_process' ) ) );
+}( exports, require( 'fs' ), require( 'path' ) ) );
