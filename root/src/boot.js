@@ -9,7 +9,11 @@ function () {
 	// requirejs task config in the Gruntfile
 	var amdConfig = {
 		context: '{%= name %}', // don't remove this!
-		baseUrl: '<%= projectUrl %><%= versionDir %>js'
+		baseUrl: '<%= projectUrl %><%= versionDir %>js',
+
+		paths: {
+			text: 'text'
+		}
 	};
 
 	return {

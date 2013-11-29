@@ -1,14 +1,15 @@
-/*global define, window */
-
-define(
-[ 'someDependency' ],
-function ( someDep ) {
+define( function ( require ) {
 
 	'use strict';
 
-	var app = {
-		launch: function ( el, context, config, mediator ) {
-			el.innerHTML = someDep;
+	var app, scaffolding;
+
+	scaffolding = require( 'text!./scaffolding' );
+
+	app = {
+		launch: function ( el ) {
+			app.el = el;
+			app.el.innerHTML = scaffolding;
 		}
 	};
 

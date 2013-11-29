@@ -57,14 +57,14 @@ module.exports = function(grunt) {
 
 
 		// Lint .js files in the src/js folder
-		// Lint .js files in the src/js folder
 		jshint: {
 			files: [
 				'src/versioned/js/**/*.js', 
 				
 				//exclude these files:
 				'!src/versioned/js/lib/**/*.js',
-				'!src/versioned/js/utils/**/*.js'
+				'!src/versioned/js/utils/**/*.js',
+				'!src/versioned/js/text.js'
 			],
 			options: {
 				undef: true,
@@ -117,6 +117,12 @@ module.exports = function(grunt) {
 					out: 'build/min/v/x/js/app.js',
 					name: 'app',
 					optimize: 'none' // js gets uglified separately, no need to waste time here
+				},
+
+				// If you change the paths config in boot.js, ensure the changes
+				// are reflected here
+				paths: {
+					text: 'text' // necessary for curl, which expects plugins in a specific folder
 				}
 			}
 		},
@@ -153,8 +159,8 @@ module.exports = function(grunt) {
 				},
 
 				// We manually specify which file extensions shouldn't be processed - basically
-				// any binary files such as images, audio, video etc
-				processContentExclude: '**/*.{jpg,png,gif,mp3,ogg,mp4}'
+				// any binary files such as images, audio, video etc, plus readmes
+				processContentExclude: [ '**/*.{jpg,png,gif,mp3,ogg,mp4}', '**/README.md' ]
 			}
 		},
 
