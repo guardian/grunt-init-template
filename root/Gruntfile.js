@@ -123,7 +123,10 @@ module.exports = function(grunt) {
 				// are reflected here
 				paths: {
 					text: 'text' // necessary for curl, which expects plugins in a specific folder
-				}
+				},
+
+				// We don't need to include loader plugins in the build
+				stubModules: [ 'text' ]
 			}
 		},
 
