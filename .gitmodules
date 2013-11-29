@@ -1,0 +1,3 @@
+[submodule "root/src/versioned/js/utils"]
+	path = root/src/versioned/js/utils
+	url = https://github.com/GuardianInteractive/utils.git
