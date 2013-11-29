@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang='en-GB' class='js-on'>
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+
+	<link rel='stylesheet' href='../../offline/next-gen.css'>
+	<link rel='stylesheet' href='../../offline/fonts.css'>
+
+	<!-- replace this with a proper (non-slug) title -->
+	<title>{%= name %}</title>
+</head>
+
+<body>
+
+	<header class="has-nav" data-link-name="global navigation: header" id="header">
+		<div class="header__inner gs-container u-cf">
+			<a class="guardian-logo-wrapper" data-link-name="site logo" href=
+			"http://www.theguardian.com/uk" id="logo"><span class="u-h">The
+			Guardian</span></a> <span class="release">Alpha</span>
+
+			<div class="nav-container">
+				<ul class="nav nav--global" data-link-name="Sections">
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"News" href="http://www.theguardian.com/uk">Home</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name="UK"
+					href="http://www.theguardian.com/uk-news">UK</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"World" href="http://www.theguardian.com/world">World</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Comment" href=
+					"http://www.theguardian.com/uk/commentisfree">Comment</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Sport" href=
+					"http://www.theguardian.com/uk/sport">Sport</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Football" href=
+					"http://www.theguardian.com/football">Football</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Life &amp; Style" href=
+					"http://www.theguardian.com/lifeandstyle">Life &amp;
+					style</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Culture" href=
+					"http://www.theguardian.com/uk/culture">Culture</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Business" href=
+					"http://www.theguardian.com/uk/business">Business</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Travel" href=
+					"http://www.theguardian.com/travel">Travel</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Technology" href=
+					"http://www.theguardian.com/technology">Technology</a></li>
+
+					<li class="nav__item"><a class="nav__link" data-link-name=
+					"Environment" href=
+					"http://www.theguardian.com/environment">Environment</a></li>
+				</ul>
+			</div><a class="control control--sections" data-link-name="Sections"
+			data-toggle="nav-popup-sections" href="#footer-nav"> <span class=
+			"control__menu i i-menu">Sections</span></a> <a class=
+			"control control--search" data-is-ajax="" data-link-name="Search icon"
+			data-toggle="nav-popup-search" href=
+			"https://www.google.co.uk/advanced_search?q=site:www.theguardian.com">
+			<span class="u-h">Search</span></a> <a class=
+			"control control--topstories" data-is-ajax="" data-link-name=
+			"Top stories" data-toggle="nav-popup-topstories" href=
+			"http://www.theguardian.com/top-stories"> <span>Top stories</span></a>
+
+			<div class="js-profile-nav js-hidden">
+				<a class="control control--profile" data-link-name="User profile"
+				data-toggle="nav-popup-profile" href=
+				"https://profile.theguardian.com/signin"><span class=
+				"js-profile-info control__info">Sign in</span> </a>
+			</div>
+
+			<div class="nav-popup-topstories nav-popup nav-popup--box is-off"
+			data-link-context="top-stories"></div>
+
+			<div class=
+			"nav-popup-profile js-profile-nav-popup nav-popup nav-popup--box is-off">
+			</div>
+
+			<div class="nav-popup-search nav-popup nav-popup--box is-off"></div>
+
+			<div class="nav-popup-sections nav-popup nav-popup--small is-off">
+				<nav data-link-name="global navigation: header : sections">
+					<ul class=
+					"nav nav--columns u-cf nav--additional-sections nav--top-border-off">
+					<li class="nav__item"><a class="nav__link" href=
+					"http://www.theguardian.com/uk">Home</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk-news">UK</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/world">World</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk/commentisfree">Comment</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk/sport">Sport</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/football">Football</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/lifeandstyle">Life &amp;
+						style</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk/culture">Culture</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk/business">Business</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/travel">Travel</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/technology">Technology</a></li>
+
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/environment">Environment</a></li>
+
+						<li class="nav__item"><a class="nav__link" data-link-name=
+						"all sections" href=
+						"http://www.theguardian.com/sections">All sections</a></li>
+					</ul>
+
+					<ul class="nav nav--columns nav--guardian-services u-cf">
+						<li class="nav__item"><a class="nav__link nav__link--faded"
+						data-link-name="Soulmates" href=
+						"https://soulmates.theguardian.com/" target=
+						"_blank">Soulmates</a></li>
+
+						<li class="nav__item"><a class="nav__link nav__link--faded"
+						data-link-name="Jobs" href="http://jobs.theguardian.com/"
+						target="_blank">Jobs</a></li>
+					</ul>
+
+					<div class="navigation-aside">
+						<div class="switcher u-cf switcher--edition">
+							<h2 class="switcher__label">Edition:</h2>
+
+							<ul class="unstyled switcher__options">
+								<li class=
+								"switcher__option switcher__option--active">UK</li>
+
+								<li class="switcher__option"><a class="edition"
+								data-edition="US" href=
+								"http://www.theguardian.com/preference/edition/us">US
+								<span class="u-h">edition</span></a></li>
+
+								<li class="switcher__option"><a class="edition"
+								data-edition="AU" href=
+								"http://www.theguardian.com/preference/edition/au">AU
+								<span class="u-h">edition</span></a></li>
+							</ul>
+						</div>
+
+						<div class="switcher u-cf switcher--version">
+							<h2 class="switcher__label">View:</h2>
+
+							<ul class="unstyled switcher__options">
+								<li class=
+								"switcher__option switcher__option--active">
+								Mobile</li>
+
+								<li class="switcher__option"><a class=
+								"js-main-site-link" data-link-name=
+								"desktop version UK" href=
+								"http://www.theguardian.com/preference/platform/desktop?page=http%3A%2F%2Fwww.theguardian.com%2Fglobal-development%2Fng-interactive%2F2013%2Fnov%2Fcashew-nut-industry-true-cost%3Fview%3Ddesktop"
+								rel="nofollow">Desktop</a></li>
+							</ul>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</header>
+
+
+	<div id="preloads">
+		<div id="preloads-inner">
+			<div class="preload" id="preload-1">
+				<div class="parts">
+					<div class="parts__head">
+						<div class="js-sticky-upper" data-id="Top2"></div>
+
+						<div class="top-banner-ad-container">
+							<div class="ad-slot ad-slot--top-banner-ad" data-base=
+							"Top2" data-extended="Top" data-median="Top">
+								<div class="ad-container"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="parts__body">
+						<h2 class="article-zone tone-news tone-accent-border">
+						<a class="tone-colour" data-link-name="article section"
+						href="http://www.theguardian.com/global-development">section header</a></h2>
+
+						<div class="article-wrapper monocolumn-wrapper">
+							<article class="article" id="article">
+								<div class="article__inner article__inner--head">
+									<header class="article__head">
+										<p class="dateline"><time data-timestamp=
+										"1385371184000" datetime=
+										'2013-11-25T09:19:44Z'>Monday 25 November
+										2013 09.19 GMT</time></p>
+
+										<h1 class="article__headline">{%= name %}
+										headline</h1>
+
+										<div class="article__standfirst"
+										data-link-name="standfirst">
+											Standfirst lorem ipsum dolor sit amet,
+											consectetur adipisicing elit. Beatae,
+											quas, sunt, eligendi, asperiores
+											voluptas quaerat ut iste corporis ab
+											corrupti ex omnis et commodi nisi magni
+											dolor laboriosam voluptatibus libero.
+										</div>
+									</header>
+
+									<div class="after-header"></div>
+								</div>
+
+								<div class="article__container">
+									<script>
+										curl = { apiName: 'require' };
+									</script>
+									<script src='../../offline/curl.js'></script>
+									<%= codeobject %>
+								</div>
+							</article>
+						</div>
+					</div>
+
+					<div class="parts__foot">
+						<div class="ad-slot ad-slot--bottom-banner-ad" data-base=
+						"Bottom2" data-extended="Bottom" data-median="Bottom">
+							<div class="ad-container"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="preload" id="preload-2">
+				<div class="parts"></div>
+			</div>
+
+			<div class="preload" id="preload-0">
+				<div class="parts"></div>
+			</div>
+
+			<div class="ad-slot ad-slot--bottom-sticky-banner-ad" data-base="x09"
+			data-extended="" data-median="">
+				<div class="ad-container"></div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer u-cf" data-link-name="footer">
+		<div class="footer__primary">
+			<div id="footer-nav">
+				<div class="footer__banner u-cf">
+					<div class="gs-container">
+						<a class=
+						"guardian-logo-wrapper guardian-logo-wrapper--footer hide-on-mobile"
+						data-link-name="site logo" href=
+						"http://www.theguardian.com/uk"><span class="u-h">The
+						Guardian</span></a> <a class="top top--footer"
+						data-link-name="back to top" href="#top">Back to top</a>
+					</div>
+				</div>
+
+				<div class="gs-container footer__navigation-wrapper u-cf">
+					<nav data-link-name="global navigation: footer : sections">
+						<ul class=
+						"nav nav--columns u-cf nav--additional-sections nav--top-border-off nav--footer">
+						<li class="nav__item"><a class="nav__link" href=
+						"http://www.theguardian.com/uk">Home</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/uk-news">UK</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/world">World</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/uk/commentisfree">Comment</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/uk/sport">Sport</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/football">Football</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/lifeandstyle">Life &amp;
+							style</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/uk/culture">Culture</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/uk/business">Business</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/travel">Travel</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/technology">Technology</a></li>
+
+							<li class="nav__item"><a class="nav__link" href=
+							"http://www.theguardian.com/environment">Environment</a></li>
+
+							<li class="nav__item"><a class="nav__link"
+							data-link-name="all sections" href=
+							"http://www.theguardian.com/sections">All
+							sections</a></li>
+						</ul>
+
+						<ul class=
+						"nav nav--columns nav--guardian-services u-cf nav--footer">
+							<li class="nav__item"><a class=
+							"nav__link nav__link--faded-footer" data-link-name=
+							"Soulmates" href="https://soulmates.theguardian.com/"
+							target="_blank">Soulmates</a></li>
+
+							<li class="nav__item"><a class=
+							"nav__link nav__link--faded-footer" data-link-name=
+							"Jobs" href="http://jobs.theguardian.com/" target=
+							"_blank">Jobs</a></li>
+						</ul>
+
+						<div class="navigation-aside navigation-aside--footer">
+							<div class=
+							"switcher u-cf switcher--columns switcher--edition">
+								<h2 class="switcher__label">Edition:</h2>
+
+								<ul class="unstyled switcher__options">
+									<li class=
+									"switcher__option switcher__option--active">
+									UK</li>
+
+									<li class="switcher__option"><a class="edition"
+									data-edition="US" href=
+									"http://www.theguardian.com/preference/edition/us">
+									US <span class="u-h">edition</span></a></li>
+
+									<li class="switcher__option"><a class="edition"
+									data-edition="AU" href=
+									"http://www.theguardian.com/preference/edition/au">
+									AU <span class="u-h">edition</span></a></li>
+								</ul>
+							</div>
+
+							<div class=
+							"switcher u-cf switcher--columns switcher--version">
+								<h2 class="switcher__label">View:</h2>
+
+								<ul class="unstyled switcher__options">
+									<li class=
+									"switcher__option switcher__option--active">
+									Mobile</li>
+
+									<li class="switcher__option"><a class=
+									"js-main-site-link" data-link-name=
+									"desktop version UK" href=
+									"http://www.theguardian.com/preference/platform/desktop?page=http%3A%2F%2Fwww.theguardian.com%2Fglobal-development%2Fng-interactive%2F2013%2Fnov%2Fcashew-nut-industry-true-cost%3Fview%3Ddesktop"
+									rel="nofollow">Desktop</a></li>
+								</ul>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<div class="footer__secondary gs-container">
+			<div class="box-indent">
+				<ul class="colophon u-cf">
+					<li class="colophon__item"><a data-link-name="about" href=
+					"http://www.theguardian.com/help/insideguardian/2012/nov/26/guardian-launches-new-mobile-site">
+					About this site</a></li>
+
+					<li class="colophon__item"><a data-link-name="help" href=
+					"http://www.theguardian.com/help/2012/nov/26/guardian-mobile-site">
+					Help</a></li>
+
+					<li class="colophon__item"><a data-link-name="contact" href=
+					"http://www.theguardian.com/help/contact-us">Contact
+					us</a></li>
+
+					<li class="colophon__item"><a data-link-name="feedback" href=
+					"http://survey.omniture.com/d1/hosted/815f9cfba1" target=
+					"_blank">Feedback</a></li>
+
+					<li class="colophon__item"><a data-link-name="terms" href=
+					"http://www.theguardian.com/help/terms-of-service">Terms &amp;
+					conditions</a></li>
+
+					<li class="colophon__item"><a data-link-name="privacy" href=
+					"http://www.theguardian.com/help/privacy-policy">Privacy
+					policy</a></li>
+
+					<li class="colophon__item"><a data-link-name="cookie" href=
+					"http://www.theguardian.com/info/cookies">Cookie
+					policy</a></li>
+
+					<li class="colophon__item hide-on-mobile"><a class=
+					"js-main-site-link" data-link-name="desktop version UK" href=
+					"http://www.theguardian.com/preference/platform/desktop?page=http%3A%2F%2Fwww.theguardian.com%2Fglobal-development%2Fng-interactive%2F2013%2Fnov%2Fcashew-nut-industry-true-cost%3Fview%3Ddesktop"
+					rel="nofollow">Desktop version</a></li>
+				</ul>
+
+				<div class="footer__misc">
+					<div class="really-serious-copyright">
+						© Guardian News and Media Limited or its affiliated
+						companies. All rights reserved.
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+
+</body>
+</html>

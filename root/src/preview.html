@@ -88,6 +88,14 @@
 		.height {
 			right: 0;
 		}
+
+		.mode {
+			margin: 0 0 1em 0;
+		}
+
+		.mode label {
+			display: block;
+		}
 	</style>
 </head>
 
@@ -104,6 +112,12 @@
 	<!-- Template -->
 	<script id='main' type='text/ractive'>
 		<div class='left'>
+			<div class='mode'>
+				<label><input type='radio' name='{{mode}}' value='index'> standalone</label>
+				<label><input type='radio' name='{{mode}}' value='ng' checked> next-gen</label>
+				<label><input type='radio' name='{{mode}}' value='r2'> R2</label>
+			</div>
+
 			<div class='custom-dimensions'>
 				<input type='number' class='width' value='{{previewWidth}}' on-input='redraw'>
 				x
@@ -123,7 +137,7 @@
 			</ul>
 		</div>
 
-		<iframe src='./' width='{{previewWidth}}' height='{{previewHeight}}' allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>
+		<iframe src='./{{mode}}.html' width='{{previewWidth}}' height='{{previewHeight}}' allowfullscreen mozallowfullscreen webkitallowfullscreen></iframe>
 	</script>
 
 
