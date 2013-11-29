@@ -1,8 +1,12 @@
 # ignore .DS_Store files and some other stuff
 .DS_Store
 .sass-cache/
-.idea/
 
-# ignore build folders
-generated/
+# ignore node_modules, this folder can get pretty big
+node_modules/
+
+# ignore the 'gubbins' folder so we can put large assets in it
+gubbins (non-tracked)/
+
+# ignore build folder
 build/
