@@ -105,16 +105,16 @@
 	<script id='main' type='text/ractive'>
 		<div class='left'>
 			<div class='custom-dimensions'>
-				<input type='number' class='width' value='{{previewWidth}}' proxy-input='redraw'>
+				<input type='number' class='width' value='{{previewWidth}}' on-input='redraw'>
 				x
-				<input type='number' class='height' value='{{previewHeight}}' proxy-input='redraw'>
+				<input type='number' class='height' value='{{previewHeight}}' on-input='redraw'>
 			</div>
 
 			<ul>
 				{{#options}}
 					<li
 						class='size-option {{( ( width === previewWidth && height === previewHeight ) ? "selected" : "" )}}'
-						proxy-tap='select:[{{width}},{{height}}]'
+						on-click='select:[{{width}},{{height}}]'
 					>
 						<strong>{{description}}</strong>
 						<span>{{width}}x{{height}}</span>
@@ -128,7 +128,7 @@
 
 
 	<!-- JS -->
-	<script src='http://www.ractivejs.org/examples/lib/Ractive.js'></script>
+	<script src='../../offline/Ractive-legacy.min.js'></script>
 
 	<script>
 		window.onload = function () {
