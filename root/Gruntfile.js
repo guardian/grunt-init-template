@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	'use strict';
 
 	grunt.initConfig({
-		
+
 		// Config
 		prod: grunt.option( 'prod' ),
 		min: grunt.option( 'min' ) || grunt.option( 'prod' ),
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 		baseUrl: 'http://interactive.guim.co.uk/',
 		projectPath: '{%= path %}/',
 		version: 'x', // will be overridden by deploy task
-		
+
 		s3: {
 			bucket: 'gdn-cdn'
 		},
@@ -59,8 +59,8 @@ module.exports = function(grunt) {
 		// Lint .js files in the src/js folder
 		jshint: {
 			files: [
-				'src/versioned/js/**/*.js', 
-				
+				'src/versioned/js/**/*.js',
+
 				//exclude these files:
 				'!src/versioned/js/lib/**/*.js',
 				'!src/versioned/js/utils/**/*.js',
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
 			}
 		},
 
-		
+
 		// Clean up old cruft
 		clean: {
 			tmp: [ 'tmp' ],
@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		
+
 		// Optimize JavaScript by minifying into a single file
 		requirejs: {
 			compile: {
@@ -196,7 +196,7 @@ module.exports = function(grunt) {
 				}]
 			}
 		},
-		
+
 		// Combine contents of `src/versioned/data` into a single `data.json` file
 		dir2json: {
 			data: {
@@ -311,7 +311,7 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-dir2json');
 	grunt.loadNpmTasks('grunt-shell');
-	
+
 
 	// Guardian Interactive tasks
 	grunt.loadNpmTasks('grunt-gui');
@@ -350,13 +350,13 @@ module.exports = function(grunt) {
 
 	// launch sequence
 	grunt.registerTask( 'deploy', [
+		// set production flag
+		'setProdFlag',
+
 		// connect to S3, establish version number
 		'createS3Instance',
 		'downloadFromS3:manifest',
 		'verifyManifest',
-
-		// set production flag
-		'setProdFlag',
 
 		// build project
 		'min',
