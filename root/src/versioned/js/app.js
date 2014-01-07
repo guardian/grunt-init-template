@@ -4,7 +4,7 @@ define( function ( require ) {
 
 	var app, scaffolding;
 
-	scaffolding = require( 'text!./scaffolding' );
+	scaffolding = require( 'text!./scaffolding.html' );
 
 	app = {
 		launch: function ( el ) {
