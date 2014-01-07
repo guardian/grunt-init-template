@@ -12,6 +12,7 @@ module.exports = function(grunt) {
 		tmpTarget: '<%= min ? "tmp" : "dev" %>',
 
 		// Template tags
+		require: '<%= prod ? "http://pasteup.guim.co.uk/js/lib/requirejs/2.1.5/require.min.js" : "../../offline/require.js" %>',
 		codeobject: grunt.file.read( 'src/codeobject.html' ),
 		projectUrl: '<%= prod ? baseUrl + projectPath : "./" %>',
 		versionDir: 'v/<%= version %>/',
