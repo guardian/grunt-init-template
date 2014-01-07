@@ -209,7 +209,7 @@ module.exports = function(grunt) {
 
 				// or if the data is small enough to inline:
 
-				// dest: 'build/<%= target %>/v/x/js/data.js',
+				// dest: 'build/<%= tmpTarget %>/v/x/js/data.js',
 				// options: {
 				// 	exclude: [ '**/README.md' ],
 				// 	space: '<%= min ? "" : "\t" %>',
