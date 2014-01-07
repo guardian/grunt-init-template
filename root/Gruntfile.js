@@ -116,17 +116,17 @@ module.exports = function(grunt) {
 					baseUrl: 'build/tmp/v/x/js/',
 					out: 'build/min/v/x/js/app.js',
 					name: 'app',
-					optimize: 'none' // js gets uglified separately, no need to waste time here
-				},
+					optimize: 'none', // js gets uglified separately, no need to waste time here
 
-				// If you change the paths config in boot.js, ensure the changes
-				// are reflected here
-				paths: {
-					text: 'text' // necessary for curl, which expects plugins in a specific folder
-				},
+					// If you change the paths config in boot.js, ensure the changes
+					// are reflected here
+					paths: {
+						text: 'text' // necessary for curl, which expects plugins in a specific folder
+					},
 
-				// We don't need to include loader plugins in the build
-				stubModules: [ 'text' ]
+					// We don't need to include loader plugins in the build
+					stubModules: [ 'text' ]
+				}
 			}
 		},
 
