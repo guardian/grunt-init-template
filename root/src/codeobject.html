@@ -16,8 +16,8 @@
 
 				if ( !figure.GUI_LOADED ) {
 					url = figure.getAttribute( 'data-interactive' );
-					
-					require([ url + 'boot' ], function ( interactive ) {
+
+					require([ url + 'boot.js' ], function ( interactive ) {
 						if ( !figure.GUI_LOADED ) {
 							interactive.boot( figure, null, null, null );
 							figure.GUI_LOADED = true;
@@ -27,7 +27,7 @@
 			};
 
 			figures = document.querySelectorAll( 'figure.interactive' );
-			
+
 			i = figures.length;
 			while ( i-- ) {
 				load( figures[i] );
