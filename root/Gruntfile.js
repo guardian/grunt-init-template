@@ -295,6 +295,11 @@ module.exports = function(grunt) {
 			open: {
 				command: 'open <%= projectUrl %>index.html'
 			}
+		},
+
+		// fetch external resources, e.g. csv from a Google Spreadsheet
+		curl: {
+			// 'src/versioned/data/table.csv': 'https://docs.google.com/spreadsheet/pub?key=0AgS_UxBggDCMdxxxxxxxxFM1ME5aMjFweWRpQnc&single=true&gid=1&output=csv'
 		}
 
 	});
@@ -312,6 +317,7 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-dir2json');
 	grunt.loadNpmTasks('grunt-shell');
+	grunt.loadNpmTasks('grunt-curl');
 
 
 	// Guardian Interactive tasks

@@ -9,17 +9,18 @@
 		"email": "interactive@guardian.co.uk"
 	},
 	"devDependencies": {
-		"grunt": "~0.4.0",
-		"grunt-contrib-jshint": "~0.6.0",
-		"grunt-contrib-uglify": "~0.2.2",
-		"grunt-contrib-watch": "~0.5.1",
-		"grunt-contrib-sass": "~0.4.1",
-		"grunt-contrib-cssmin": "~0.6.1",
+		"grunt": "~0.4.2",
+		"grunt-contrib-jshint": "~0.8.0",
+		"grunt-contrib-uglify": "~0.2.7",
+		"grunt-contrib-watch": "~0.5.3",
+		"grunt-contrib-sass": "~0.6.0",
+		"grunt-contrib-cssmin": "~0.7.0",
 		"grunt-contrib-clean": "~0.5.0",
 		"grunt-contrib-requirejs": "~0.4.1",
-		"grunt-contrib-copy": "~0.4.1",
-		"grunt-shell": "~0.3.1",
-		"grunt-dir2json": "~0.1.5",
+		"grunt-contrib-copy": "~0.5.0",
+		"grunt-shell": "~0.6.1",
+		"grunt-dir2json": "~0.1.6",
+		"grunt-curl": "~1.2.1",
 		"grunt-gui": "git://github.com/GuardianInteractive/grunt-gui.git"
 	},
 	"jam": {
