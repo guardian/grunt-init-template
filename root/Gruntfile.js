@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 			},
 			data: {
 				files: 'src/versioned/data/**/*',
-				tasks: 'dir2json'
+				tasks: 'spelunk'
 			},
 			versioned: {
 				files: [ 'src/versioned/**/*', '!src/versioned/js/**/*' ],
@@ -199,7 +199,7 @@ module.exports = function(grunt) {
 		},
 
 		// Combine contents of `src/versioned/data` into a single `data.json` file
-		dir2json: {
+		spelunk: {
 			data: {
 				root: 'src/versioned/data/',
 				dest: 'build/<%= tmpTarget %>/v/x/data/data.json',
@@ -309,15 +309,15 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-requirejs');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.loadNpmTasks('grunt-dir2json');
+	grunt.loadNpmTasks('grunt-spelunk');
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-curl');
+	grunt.loadNpmTasks('grunt-sass');
 
 
 	// Guardian Interactive tasks
@@ -343,7 +343,7 @@ module.exports = function(grunt) {
 		'copy:js',
 		'copy:versioned',
 		'sass',
-		'dir2json'
+		'spelunk'
 	];
 
 	grunt.registerTask( 'build', buildSequence );
