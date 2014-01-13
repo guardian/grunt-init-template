@@ -21,7 +21,7 @@ bloody npm install -g grunt-init
 ```
 
 ### 2. Install the template
-`git clone git@github.com:GuardianInteractive/grunt-init-template.git ~/.grunt-init/gui`
+`git clone https://github.com/GuardianInteractive/grunt-init-template.git ~/.grunt-init/gui`
 
 
 ## Usage
